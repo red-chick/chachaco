@@ -6,13 +6,17 @@ import Header from "../src/header/components/Header";
 import "semantic-ui-css/semantic.min.css";
 import "../styles/globals.css";
 
+import UserContextProvider from "../src/common/contexts/UserContext";
+
 function App({ Component, pageProps }: AppProps) {
   return (
     <>
-      <Header />
-      <Container text style={{ height: "100%" }}>
-        <Component {...pageProps} />
-      </Container>
+      <UserContextProvider>
+        <Header />
+        <Container text style={{ height: "100%" }}>
+          <Component {...pageProps} />
+        </Container>
+      </UserContextProvider>
     </>
   );
 }

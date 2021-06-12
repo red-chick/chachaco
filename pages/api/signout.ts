@@ -1,18 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { firebaseAdminAuth } from "../../src/firebase/lib";
+import { firebaseAuth } from "../../src/firebase/lib";
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "POST") {
-    const { email, password, nickname } = req.body;
-
-    firebaseAdminAuth()
-      .createUser({
-        email,
-        emailVerified: false,
-        password,
-        displayName: nickname,
-        disabled: false,
-      })
+  if (req.method === "GET") {
+    firebaseAuth()
+      .signOut()
       .then((data) => {
         res.status(200).send("success");
       })

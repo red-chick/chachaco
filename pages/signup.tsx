@@ -6,6 +6,7 @@ import { checkEmail } from "../src/signup/utils";
 const SignUpPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -13,6 +14,9 @@ const SignUpPage = () => {
   const validation = () => {
     if (
       !email ||
+      !checkEmail(email) ||
+      !nickname ||
+      nickname.length < 3 ||
       !password ||
       password.length < 8 ||
       password !== checkPassword
@@ -35,6 +39,7 @@ const SignUpPage = () => {
         body: JSON.stringify({
           email,
           password,
+          nickname,
         }),
       });
 
@@ -74,9 +79,24 @@ const SignUpPage = () => {
                 }
                 icon="user"
                 iconPosition="left"
+                type="email"
                 placeholder="이메일 주소를 입력해주세요"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+              />
+              <Form.Input
+                fluid
+                error={
+                  nickname && nickname.length > 3
+                    ? "닉네임은 3글자 이상이어야 합니다."
+                    : null
+                }
+                icon="user"
+                iconPosition="left"
+                placeholder="닉네임을 입력해주세요"
+                type="text"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
               />
               <Form.Input
                 fluid

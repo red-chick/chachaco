@@ -10,7 +10,7 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Header />
-      <Container text style={{ marginTop: "7em" }}>
+      <Container text style={{ height: "100%" }}>
         <Component {...pageProps} />
       </Container>
     </>

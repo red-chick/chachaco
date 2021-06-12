@@ -1,4 +1,4 @@
-import firebase from "./lib";
+import { firestore } from "./lib";
 
 type Where = {
   fieldPath: string | FirebaseFirestore.FieldPath;
@@ -7,7 +7,7 @@ type Where = {
 };
 
 export const getCollection = async (collection: string, where?: Where) => {
-  const ref = firebase.collection(collection);
+  const ref = firestore.collection(collection);
   const snapshot = where
     ? await ref.where(where.fieldPath, where.opStr, where.value).get()
     : await ref.get();

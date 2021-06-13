@@ -19,6 +19,22 @@ function getExt(filename: string) {
     .toLowerCase();
 }
 
+export const checkGid = (gid: string) => {
+  var exptext = /^G\-[A-Z0-9]{3}\-[A-Z0-9]{3}\-[A-Z0-9]{3}$/;
+  if (exptext.test(gid) == false) {
+    return false;
+  }
+  return true;
+};
+
+export const checkPid = (gid: string) => {
+  var exptext = /^P\-[A-Z0-9]{3}\-[A-Z0-9]{3}\-[A-Z0-9]{3}$/;
+  if (exptext.test(gid) == false) {
+    return false;
+  }
+  return true;
+};
+
 const GameAddPage = () => {
   const router = useRouter();
   const {
@@ -53,7 +69,7 @@ const GameAddPage = () => {
   const submit = async () => {
     if (!title || !gid || !pid || !content) return;
     try {
-      await fetch("/api/game", {
+      const res = await fetch("/api/game", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,8 +84,16 @@ const GameAddPage = () => {
           imageUrl,
         }),
       });
-      alert("게임이 업로드 되었습니다.");
-      router.push("/");
+      console.log(res);
+      if (res.status === 200) {
+        alert("게임이 업로드 되었습니다.");
+        router.push("/");
+      } else if (res.status === 409) {
+        alert("이미 등록되어 있는 게임 ID 입니다.");
+      } else {
+        alert("게임 업로드에 실패하였습니다. 잠시후 다시 이용해주세요.");
+        console.error(res.statusText);
+      }
     } catch (error) {
       alert("게임 업로드에 실패하였습니다. 잠시후 다시 이용해주세요.");
       console.error(error);
@@ -97,7 +121,11 @@ const GameAddPage = () => {
         </Form.Field>
         <Form.Field>
           <label>게임 ID *</label>
-          <input
+          <Form.Input
+            fluid
+            error={
+              gid && !checkGid(gid) ? "게임 ID 형식이 올바르지 않습니다." : null
+            }
             placeholder="G-000-000-000"
             value={gid}
             onChange={(e) => setGid(e.target.value)}
@@ -105,7 +133,13 @@ const GameAddPage = () => {
         </Form.Field>
         <Form.Field>
           <label>프로그래머 ID *</label>
-          <input
+          <Form.Input
+            fluid
+            error={
+              pid && !checkPid(pid)
+                ? "프로그래머 ID 형식이 올바르지 않습니다."
+                : null
+            }
             placeholder="P-000-000-000"
             value={pid}
             onChange={(e) => setPid(e.target.value)}
@@ -134,7 +168,15 @@ const GameAddPage = () => {
         )}
         <Button
           type="submit"
-          disabled={!title || !gid || !pid || !content || uploadingImage}
+          disabled={
+            !title ||
+            !gid ||
+            !pid ||
+            !content ||
+            uploadingImage ||
+            !checkGid(gid) ||
+            !checkPid(pid)
+          }
         >
           등록
         </Button>

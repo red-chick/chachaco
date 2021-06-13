@@ -47,9 +47,8 @@ const Games = () => {
     );
 
   const like = async (id: string) => {
-    if (loadingLikes.includes(id)) return;
-
     setLoadingLikes((ids) => [...ids, id]);
+
     await fetch("/api/game/like", {
       method: "POST",
       headers: {
@@ -65,9 +64,8 @@ const Games = () => {
   };
 
   const unlike = async (id: string) => {
-    if (loadingLikes.includes(id)) return;
-
     setLoadingLikes((ids) => [...ids, id]);
+
     await fetch("/api/game/unlike", {
       method: "POST",
       headers: {
@@ -106,7 +104,8 @@ const Games = () => {
                     }
                     onClick={(e) => {
                       e.stopPropagation();
-                      user && game.likesUids.includes(user.uid)
+                      if (!user || loadingLikes.includes(game.id)) return;
+                      game.likesUids.includes(user.uid)
                         ? unlike(game.id)
                         : like(game.id);
                     }}
@@ -118,7 +117,8 @@ const Games = () => {
                     loading={loadingLikes.includes(game.id)}
                     onClick={(e) => {
                       e.stopPropagation();
-                      user && game.likesUids.includes(user.uid)
+                      if (!user || loadingLikes.includes(game.id)) return;
+                      game.likesUids.includes(user.uid)
                         ? unlike(game.id)
                         : like(game.id);
                     }}

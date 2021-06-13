@@ -129,7 +129,7 @@ const SignUpPage = () => {
             size="large"
             disabled={!email || !password || password !== checkPassword}
           >
-            Sign Up
+            회원가입
           </Button>
         </Segment>
       </Form>

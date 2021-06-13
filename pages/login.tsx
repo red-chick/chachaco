@@ -72,12 +72,12 @@ const LoginPage = () => {
               size="large"
               disabled={!email || !password}
             >
-              Log in
+              로그인
             </Button>
           </Segment>
         </Form>
         <Message className={styles.message}>
-          계정이 없으신가요? <Link href="/signup">Sign Up</Link>
+          계정이 없으신가요? <Link href="/signup">회원가입</Link>
         </Message>
       </div>
       <Dimmer active={loading}>

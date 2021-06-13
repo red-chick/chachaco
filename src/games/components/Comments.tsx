@@ -56,7 +56,7 @@ const Comments = ({ game }) => {
   return (
     <Comment.Group>
       <Header as="h3" dividing>
-        Comments
+        댓글
       </Header>
 
       {comments &&
@@ -72,20 +72,22 @@ const Comments = ({ game }) => {
           </Comment>
         ))}
 
-      <Form reply onSubmit={submit}>
-        <Form.Input
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          placeholder="댓글을 입력해주세요."
-        />
-        <Button
-          content="Add Reply"
-          labelPosition="left"
-          icon="edit"
-          disabled={!comment}
-          primary
-        />
-      </Form>
+      {user && (
+        <Form reply onSubmit={submit}>
+          <Form.Input
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="댓글을 입력해주세요."
+          />
+          <Button
+            content="댓글 작성"
+            labelPosition="left"
+            icon="edit"
+            disabled={!comment}
+            primary
+          />
+        </Form>
+      )}
     </Comment.Group>
   );
 };

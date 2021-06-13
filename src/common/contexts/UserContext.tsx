@@ -132,6 +132,7 @@ export const UserContextProvider: React.FC<Props> = ({ children }: Props) => {
             if (router.pathname === "/login" || router.pathname === "/signup")
               router.push("/");
           } else {
+            if (router.pathname === "/game/add") router.push("/");
             dispatchGetUserNoAuth(dispatch);
           }
         });
@@ -154,6 +155,7 @@ export const UserContextProvider: React.FC<Props> = ({ children }: Props) => {
   const logout = async () => {
     const firebaseApp = await asyncGetFirebaseApp();
     firebaseApp.auth().signOut();
+    if (router.pathname === "/game/add") router.push("/");
   };
 
   return (

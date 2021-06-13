@@ -16,7 +16,9 @@ const Header = () => {
     <Menu fixed={"top"} size="large">
       <Container style={{ height: "4rem" }}>
         <Link href="/">
-          <Menu.Item active={router.pathname === "/"}>Home</Menu.Item>
+          <Menu.Item active={router.pathname === "/"}>
+            <strong>게임 목록</strong>
+          </Menu.Item>
         </Link>
         <Menu.Item position="right">
           {user && (
@@ -27,18 +29,18 @@ const Header = () => {
                 </Button>
               </Link>
               <Button onClick={() => logout()} style={{ marginLeft: "0.5em" }}>
-                Log out
+                로그아웃
               </Button>
             </>
           )}
           {!loading && !user && (
             <>
               <Link href="/login">
-                <Button>Log in</Button>
+                <Button>로그인</Button>
               </Link>
               <Link href="/signup">
                 <Button primary={true} style={{ marginLeft: "0.5em" }}>
-                  Sign Up
+                  회원가입
                 </Button>
               </Link>
             </>

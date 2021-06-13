@@ -85,7 +85,7 @@ const GameAddPage = () => {
 
   return (
     <div className={styles.container}>
-      <Header size="huge">게임 추가</Header>
+      <Header size="huge">게임 등록</Header>
       <Form onSubmit={submit}>
         <Form.Field>
           <label>게임 제목 *</label>
@@ -136,7 +136,7 @@ const GameAddPage = () => {
           type="submit"
           disabled={!title || !gid || !pid || !content || uploadingImage}
         >
-          Submit
+          등록
         </Button>
       </Form>
     </div>

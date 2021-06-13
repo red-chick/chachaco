@@ -90,9 +90,7 @@ const GamePage = () => {
         <title>{game.title} - 차근차근 게임 공유 커뮤니티</title>
       </Head>
       <Header size="huge">{game.title}</Header>
-      <p>
-        {game.uname} | {getKorDate(game.createdAt._seconds)}
-      </p>
+      <p>{getKorDate(game.createdAt._seconds)}</p>
       <p>
         <strong>{game.gid}</strong> | <strong>{game.pid}</strong>
       </p>

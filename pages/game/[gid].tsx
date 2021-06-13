@@ -1,7 +1,17 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Dimmer, Header, Image, Loader } from "semantic-ui-react";
-import useSWR from "swr";
+import { useState } from "react";
+import {
+  Button,
+  Dimmer,
+  Header,
+  Icon,
+  Image,
+  Label,
+  Loader,
+} from "semantic-ui-react";
+import useSWR, { trigger } from "swr";
+import { useUserContext } from "../../src/common/contexts/UserContext";
 import Comments from "../../src/games/components/Comments";
 import styles from "../../styles/game/gid.module.css";
 
@@ -25,6 +35,12 @@ const getKorDate = (createdSeconds: number) => {
 
 const GamePage = () => {
   const router = useRouter();
+  const {
+    state: { user },
+  } = useUserContext();
+
+  const [loadingLikes, setLoadingLikes] = useState([]);
+
   const { data: game } = useSWR(`/api/game/${router.query.gid}`, fetcher);
 
   if (!game)
@@ -33,6 +49,40 @@ const GamePage = () => {
         <Loader />
       </Dimmer>
     );
+
+  const like = async (id: string) => {
+    setLoadingLikes((ids) => [...ids, id]);
+
+    await fetch("/api/game/like", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+        uid: user.uid,
+      }),
+    });
+    await trigger(`/api/game/${router.query.gid}`);
+    setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
+  };
+
+  const unlike = async (id: string) => {
+    setLoadingLikes((ids) => [...ids, id]);
+
+    await fetch("/api/game/unlike", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+        uid: user.uid,
+      }),
+    });
+    await trigger(`/api/game/${router.query.gid}`);
+    setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
+  };
 
   return (
     <div className={styles.container}>
@@ -51,6 +101,32 @@ const GamePage = () => {
         className={styles.content}
         dangerouslySetInnerHTML={{ __html: game.content }}
       />
+      <Button as="div" labelPosition="left">
+        <Label
+          as="a"
+          basic
+          color={user && game.likesUids.includes(user.uid) ? "red" : null}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!user || loadingLikes.includes(game.id)) return;
+            game.likesUids.includes(user.uid) ? unlike(game.id) : like(game.id);
+          }}
+        >
+          {game.likesCount}
+        </Label>
+        <Button
+          icon
+          loading={loadingLikes.includes(game.id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!user || loadingLikes.includes(game.id)) return;
+            game.likesUids.includes(user.uid) ? unlike(game.id) : like(game.id);
+          }}
+          color={user && game.likesUids.includes(user.uid) ? "red" : null}
+        >
+          <Icon name="heart" />
+        </Button>
+      </Button>
       <Comments game={game} />
     </div>
   );

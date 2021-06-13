@@ -84,7 +84,7 @@ const Games = () => {
     <Item.Group divided>
       {data.map((game) => (
         <Link href={`/game/${game.gid}`}>
-          <Item key={game.id} style={{ cursor: "pointer" }}>
+          <Item style={{ cursor: "pointer" }}>
             <Image size="small" src={game.imageUrls[0]} error={""} />
             <Item.Content>
               <Item.Header>{game.title}</Item.Header>

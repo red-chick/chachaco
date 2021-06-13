@@ -94,7 +94,7 @@ const Games = () => {
             <Item.Content>
               <Item.Header>{game.title}</Item.Header>
               <Item.Description>
-                {game.uname} | {getKorDate(game.createdAt._seconds)}
+                {getKorDate(game.createdAt._seconds)}
               </Item.Description>
               <Item.Description>
                 <strong>{game.gid}</strong> | <strong>{game.pid}</strong>

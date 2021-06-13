@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { Dimmer, Header, Image, Loader } from "semantic-ui-react";
 import useSWR from "swr";
@@ -35,6 +36,9 @@ const GamePage = () => {
 
   return (
     <div className={styles.container}>
+      <Head>
+        <title>{game.title} - 차근차근 게임 공유 커뮤니티</title>
+      </Head>
       <Header size="huge">{game.title}</Header>
       <p>
         {game.uname} | {getKorDate(game.createdAt._seconds)}

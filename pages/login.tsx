@@ -13,6 +13,7 @@ import { useUserContext } from "../src/common/contexts/UserContext";
 
 import styles from "../styles/login.module.css";
 import Link from "next/link";
+import Head from "next/head";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -45,6 +46,9 @@ const LoginPage = () => {
 
   return (
     <div className={styles.container}>
+      <Head>
+        <title>로그인 - 차근차근 게임 공유 커뮤니티</title>
+      </Head>
       <div className={styles.formWrapper}>
         <Form size="large" onSubmit={submit}>
           <Segment stacked>

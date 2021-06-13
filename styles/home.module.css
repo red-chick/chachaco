@@ -3,8 +3,9 @@
   margin: 5em auto;
 }
 
-.header {
-  margin-bottom: 4em;
+.container > .header {
+  margin-bottom: 2em;
+  text-align: center;
 }
 
 @media screen and (max-width: 700px) {
@@ -14,7 +15,7 @@
     margin: 0;
   }
 
-  .header {
-    margin-bottom: 2em;
+  .container > .header {
+    margin-bottom: 0;
   }
 }

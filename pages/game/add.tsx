@@ -12,6 +12,7 @@ import styles from "../../styles/game/add.module.css";
 import { useState } from "react";
 import { useUserContext } from "../../src/common/contexts/UserContext";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 function getExt(filename: string) {
   return filename
@@ -109,6 +110,9 @@ const GameAddPage = () => {
 
   return (
     <div className={styles.container}>
+      <Head>
+        <title>게임 등록 - 차근차근 게임 공유 커뮤니티</title>
+      </Head>
       <Header size="huge">게임 등록</Header>
       <Form onSubmit={submit}>
         <Form.Field>

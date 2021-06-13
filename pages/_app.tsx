@@ -16,6 +16,11 @@ function App({ Component, pageProps }: AppProps) {
           name="viewport"
           content="initial-scale=1.0, width=device-width, user-scalable=no"
         />
+        <title>차근차근 게임 공유 커뮤니티</title>
+        <meta
+          name="description"
+          content="차근차근 게임 코딩으로 만든 게임을 공유하는 커뮤니티 입니다."
+        />
       </Head>
       <UserContextProvider>
         <Header />

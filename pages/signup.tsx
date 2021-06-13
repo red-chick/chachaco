@@ -1,4 +1,5 @@
 import { useRouter } from "next/dist/client/router";
+import Head from "next/head";
 import { useState } from "react";
 import { Button, Dimmer, Form, Loader, Segment } from "semantic-ui-react";
 
@@ -65,6 +66,9 @@ const SignUpPage = () => {
 
   return (
     <div className={styles.container}>
+      <Head>
+        <title>회원가입 - 차근차근 게임 공유 커뮤니티</title>
+      </Head>
       <Form size="large" onSubmit={submit}>
         <Segment stacked>
           <Form.Input

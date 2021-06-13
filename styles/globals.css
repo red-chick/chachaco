@@ -9,9 +9,10 @@ body > div {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-/* body > div {
+body > div > main {
+  padding-top: 4rem;
   height: 100%;
-} */
+}
 
 a {
   color: inherit;

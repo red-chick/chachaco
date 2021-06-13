@@ -13,9 +13,9 @@ function App({ Component, pageProps }: AppProps) {
     <>
       <UserContextProvider>
         <Header />
-        <Container text style={{ height: "100%" }}>
+        <main>
           <Component {...pageProps} />
-        </Container>
+        </main>
       </UserContextProvider>
     </>
   );

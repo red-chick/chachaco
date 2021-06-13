@@ -1,7 +1,10 @@
 import { useRouter } from "next/dist/client/router";
 import { useState } from "react";
-import { Button, Dimmer, Form, Grid, Loader, Segment } from "semantic-ui-react";
+import { Button, Dimmer, Form, Loader, Segment } from "semantic-ui-react";
+
 import { checkEmail } from "../src/signup/utils";
+
+import styles from "../styles/signup.module.css";
 
 const SignUpPage = () => {
   const router = useRouter();
@@ -61,87 +64,79 @@ const SignUpPage = () => {
   };
 
   return (
-    <>
-      <Grid
-        textAlign="center"
-        style={{ height: "100%", margin: 0 }}
-        verticalAlign="middle"
-      >
-        <Grid.Column style={{ maxWidth: 450 }}>
-          <Form size="large" onSubmit={submit}>
-            <Segment stacked>
-              <Form.Input
-                fluid
-                error={
-                  email && !checkEmail(email)
-                    ? "이메일 형식이 올바르지 않습니다."
-                    : null
-                }
-                icon="user"
-                iconPosition="left"
-                type="email"
-                placeholder="이메일 주소를 입력해주세요"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <Form.Input
-                fluid
-                error={
-                  nickname && nickname.length > 3
-                    ? "닉네임은 3글자 이상이어야 합니다."
-                    : null
-                }
-                icon="user"
-                iconPosition="left"
-                placeholder="닉네임을 입력해주세요"
-                type="text"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-              />
-              <Form.Input
-                fluid
-                error={
-                  password && password.length < 8
-                    ? "비밀번호는 8자리 이상이어야 합니다."
-                    : null
-                }
-                icon="lock"
-                iconPosition="left"
-                placeholder="비밀번호를 입력해주세요"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Form.Input
-                fluid
-                error={
-                  checkPassword && checkPassword !== password
-                    ? "비밀번호가 일치하지 않습니다."
-                    : null
-                }
-                icon="lock"
-                iconPosition="left"
-                placeholder="비밀번호를 다시 한번 입력해주세요"
-                type="password"
-                value={checkPassword}
-                onChange={(e) => setCheckPassword(e.target.value)}
-              />
-              <Button
-                color="teal"
-                fluid
-                size="large"
-                disabled={!email || !password || password !== checkPassword}
-              >
-                Sign Up
-              </Button>
-            </Segment>
-          </Form>
-        </Grid.Column>
-      </Grid>
+    <div className={styles.container}>
+      <Form size="large" onSubmit={submit}>
+        <Segment stacked>
+          <Form.Input
+            fluid
+            error={
+              email && !checkEmail(email)
+                ? "이메일 형식이 올바르지 않습니다."
+                : null
+            }
+            icon="user"
+            iconPosition="left"
+            type="email"
+            placeholder="이메일 주소를 입력해주세요"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Form.Input
+            fluid
+            error={
+              nickname && nickname.length > 3
+                ? "닉네임은 3글자 이상이어야 합니다."
+                : null
+            }
+            icon="user"
+            iconPosition="left"
+            placeholder="닉네임을 입력해주세요"
+            type="text"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+          />
+          <Form.Input
+            fluid
+            error={
+              password && password.length < 8
+                ? "비밀번호는 8자리 이상이어야 합니다."
+                : null
+            }
+            icon="lock"
+            iconPosition="left"
+            placeholder="비밀번호를 입력해주세요"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Form.Input
+            fluid
+            error={
+              checkPassword && checkPassword !== password
+                ? "비밀번호가 일치하지 않습니다."
+                : null
+            }
+            icon="lock"
+            iconPosition="left"
+            placeholder="비밀번호를 다시 한번 입력해주세요"
+            type="password"
+            value={checkPassword}
+            onChange={(e) => setCheckPassword(e.target.value)}
+          />
+          <Button
+            color="teal"
+            fluid
+            size="large"
+            disabled={!email || !password || password !== checkPassword}
+          >
+            Sign Up
+          </Button>
+        </Segment>
+      </Form>
       <Dimmer active={loading}>
         <Loader />
       </Dimmer>
-    </>
+    </div>
   );
 };
 

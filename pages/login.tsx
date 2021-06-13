@@ -25,28 +25,20 @@ const LoginPage = () => {
   const submit = async () => {
     try {
       setLoading(true);
-
-      const res = await fetch(`/api/login?email=${email}&password=${password}`);
-
-      if (res.status === 200) {
-        const user = await res.json();
-        login(user);
-        router.push("/");
-      } else {
-        const { code } = await res.json();
-        if (code === "auth/invalid-email") {
-          alert("입력하신 이메일 주소의 형식이 올바르지 않습니다.");
-        } else if (code === "auth/user-not-found") {
-          alert("계정을 찾을 수 없습니다.");
-        } else if (code === "auth/wrong-password") {
-          alert("입력하신 비밀번호가 올바르지 않습니다.");
-        } else {
-          alert("에러가 발생했습니다. 잠시 후 다시 이용해주세요.");
-        }
-        setLoading(false);
-      }
+      await login(email, password);
+      router.push("/");
     } catch (error) {
-      alert("에러가 발생했습니다. 잠시 후 다시 이용해주세요.");
+      const { code } = error;
+      console.log("code", code);
+      if (code === "auth/invalid-email") {
+        alert("입력하신 이메일 주소의 형식이 올바르지 않습니다.");
+      } else if (code === "auth/user-not-found") {
+        alert("계정을 찾을 수 없습니다.");
+      } else if (code === "auth/wrong-password") {
+        alert("입력하신 비밀번호가 올바르지 않습니다.");
+      } else {
+        alert("에러가 발생했습니다. 잠시 후 다시 이용해주세요.");
+      }
       setLoading(false);
     }
   };

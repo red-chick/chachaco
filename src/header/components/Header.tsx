@@ -1,4 +1,4 @@
-import { Button, Container, Menu } from "semantic-ui-react";
+import { Button, Container, Icon, Menu } from "semantic-ui-react";
 import Link from "next/link";
 import { useUserContext } from "../../common/contexts/UserContext";
 import { useRouter } from "next/router";
@@ -19,7 +19,18 @@ const Header = () => {
           <Menu.Item active={router.pathname === "/"}>Home</Menu.Item>
         </Link>
         <Menu.Item position="right">
-          {user && <Button onClick={() => logout()}>Log out</Button>}
+          {user && (
+            <>
+              <Link href="/game/add">
+                <Button icon>
+                  <Icon name="plus" />
+                </Button>
+              </Link>
+              <Button onClick={() => logout()} style={{ marginLeft: "0.5em" }}>
+                Log out
+              </Button>
+            </>
+          )}
           {!loading && !user && (
             <>
               <Link href="/login">

@@ -1,20 +1,15 @@
-import useSWR from "swr";
+import { Header } from "semantic-ui-react";
+import Games from "../src/games/components/Games";
 
-const fetcher = async (input: RequestInfo, init: RequestInit) => {
-  const res = await fetch(input, init);
-  return res.json();
-};
+import styles from "../styles/home.module.css";
 
 export default function Home() {
-  const { data } = useSWR("/api/games", fetcher);
-
-  if (!data) return <div>Loading...</div>;
-
   return (
-    <ul>
-      {data.map((game) => (
-        <li key={game.id}>{game.title}</li>
-      ))}
-    </ul>
+    <div className={styles.container}>
+      <Header size="huge" style={{ textAlign: "center", marginBottom: "2rem" }}>
+        차근차근 게임 코딩 게임 공유
+      </Header>
+      <Games />
+    </div>
   );
 }

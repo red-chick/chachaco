@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
-
-import { getCollection } from "../../src/firebase/utils";
+import { getCollectionWhere } from "../../../src/firebase/utils";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const { gameId } = req.query;
   if (req.method === "GET") {
-    const data = await getCollection("games", {
-      fieldPath: "createdAt",
-      directionStr: "desc",
+    const data = await getCollectionWhere("comments", {
+      fieldPath: "gameId",
+      opStr: "==",
+      value: gameId,
     });
     res.json(data);
   } else {

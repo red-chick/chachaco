@@ -84,7 +84,7 @@ const SignUpPage = () => {
           <Form.Input
             fluid
             error={
-              nickname && nickname.length > 3
+              nickname && nickname.length < 3
                 ? "닉네임은 3글자 이상이어야 합니다."
                 : null
             }

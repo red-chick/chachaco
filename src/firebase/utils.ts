@@ -1,4 +1,10 @@
-import { firestore } from "./lib";
+import firebase from "firebase";
+import { firestore } from "./admin";
+
+type OrderBy = {
+  fieldPath: string | FirebaseFirestore.FieldPath;
+  directionStr?: FirebaseFirestore.OrderByDirection;
+};
 
 type Where = {
   fieldPath: string | FirebaseFirestore.FieldPath;
@@ -6,11 +12,48 @@ type Where = {
   value: any;
 };
 
-export const getCollection = async (collection: string, where?: Where) => {
+export const addDoc = async (collection: string, data: any) => {
+  const docRef = await firestore.collection(collection).add(data);
+  return docRef;
+};
+
+export const addArrayDoc = async (
+  collection: string,
+  docId: string,
+  updateData: any
+) => {
+  const docRef = await firestore
+    .collection(collection)
+    .doc(docId)
+    .update(updateData);
+  return docRef;
+};
+
+export const getCollection = async (collection: string, orderBy?: OrderBy) => {
   const ref = firestore.collection(collection);
-  const snapshot = where
-    ? await ref.where(where.fieldPath, where.opStr, where.value).get()
+  const snapshot = orderBy
+    ? await ref.orderBy(orderBy.fieldPath, orderBy.directionStr).get()
     : await ref.get();
+
+  if (snapshot.empty) return;
+
+  const data = [];
+
+  snapshot.forEach((doc) => {
+    data.push({
+      id: doc.id,
+      ...doc.data(),
+    });
+  });
+
+  return data;
+};
+
+export const getCollectionWhere = async (collection: string, where: Where) => {
+  const ref = firestore.collection(collection);
+  const snapshot = await ref
+    .where(where.fieldPath, where.opStr, where.value)
+    .get();
 
   if (snapshot.empty) return;
 

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { firebaseAdminAuth } from "../../src/firebase/lib";
+import { firebaseAdminAuth } from "../../src/firebase/admin";
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {

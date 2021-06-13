@@ -8,17 +8,11 @@ import {
   useEffect,
   useReducer,
 } from "react";
-
-type UserType = {
-  email: string;
-  emailVerified: boolean;
-  displayName: string;
-  uid: string;
-};
+import firebase from "firebase";
 
 export type StateType = {
   loading: boolean;
-  user: UserType;
+  user: firebase.User;
   error?: string;
 };
 
@@ -35,7 +29,10 @@ export const GET_USER_NO_AUTH = "GET_USER_NO_AUTH";
 
 type ActionType =
   | { type: typeof GET_USER }
-  | { type: typeof GET_USER_SUCCESS; user: UserType }
+  | {
+      type: typeof GET_USER_SUCCESS;
+      user: firebase.User;
+    }
   | { type: typeof GET_USER_ERROR; error: string }
   | { type: typeof GET_USER_NO_AUTH };
 
@@ -45,7 +42,7 @@ const loading = () => ({
   error: undefined,
 });
 
-const success = (user: UserType) => ({
+const success = (user: firebase.User) => ({
   user,
   loading: false,
   error: undefined,
@@ -87,7 +84,7 @@ export const dispatchGetUser = (dispatch: Dispatch<ActionType>): void => {
 
 export const dispatchGetUserSuccess = (
   dispatch: Dispatch<ActionType>,
-  user: UserType
+  user: firebase.User
 ): void => {
   dispatch({ type: GET_USER_SUCCESS, user });
 };
@@ -106,7 +103,7 @@ export const dispatchGetUserNoAuth = (dispatch: Dispatch<ActionType>): void => {
 type UserContextValue = {
   state: StateType;
   dispatch: Dispatch<ActionType>;
-  login: (user: UserType) => void;
+  login: (email: string, password: string) => void;
   logout: () => void;
 };
 
@@ -116,43 +113,47 @@ type Props = {
   children: ReactNode;
 };
 
+const asyncGetFirebaseApp = async () => {
+  const { firebaseApp } = await import("../../../src/firebase/firebase");
+  return firebaseApp;
+};
+
 export const UserContextProvider: React.FC<Props> = ({ children }: Props) => {
   const router = useRouter();
   const [state, dispatch] = useReducer(userReducer, initialState);
 
   useEffect(() => {
-    (async () => {
+    const fetchAuth = async () => {
       try {
-        const res = await fetch("/api/auth");
-
-        if (res.status === 200) {
-          const user = await res.json();
-
-          dispatchGetUserSuccess(dispatch, user);
-
-          if (router.pathname === "/login" || router.pathname === "/signup")
-            router.push("/");
-        } else {
-          dispatchGetUserNoAuth(dispatch);
-        }
+        const firebaseApp = await asyncGetFirebaseApp();
+        firebaseApp.auth().onAuthStateChanged((user) => {
+          if (user) {
+            dispatchGetUserSuccess(dispatch, user);
+            if (router.pathname === "/login" || router.pathname === "/signup")
+              router.push("/");
+          } else {
+            dispatchGetUserNoAuth(dispatch);
+          }
+        });
       } catch (error) {
         dispatchGetUserError(dispatch, error);
       }
-    })();
+    };
+
+    fetchAuth();
   }, []);
 
-  const login = (user: UserType) => {
+  const login = async (email: string, password: string) => {
+    const firebaseApp = await asyncGetFirebaseApp();
+    const { user } = await firebaseApp
+      .auth()
+      .signInWithEmailAndPassword(email, password);
     dispatchGetUserSuccess(dispatch, user);
   };
 
   const logout = async () => {
-    try {
-      await fetch("/api/signout");
-      dispatchGetUserNoAuth(dispatch);
-      router.push("/");
-    } catch (error) {
-      alert("로그아웃에 실패하였습니다.");
-    }
+    const firebaseApp = await asyncGetFirebaseApp();
+    firebaseApp.auth().signOut();
   };
 
   return (

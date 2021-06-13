@@ -11,6 +11,7 @@ import {
 } from "semantic-ui-react";
 import useSWR, { trigger } from "swr";
 import { useUserContext } from "../../common/contexts/UserContext";
+import styles from "./Games.module.css";
 
 const fetcher = async (input: RequestInfo, init: RequestInit) => {
   const res = await fetch(input, init);
@@ -85,7 +86,11 @@ const Games = () => {
       {data.map((game) => (
         <Link href={`/game/${game.gid}`}>
           <Item style={{ cursor: "pointer" }}>
-            <Image size="small" src={game.imageUrls[0]} error={""} />
+            <Image
+              size="small"
+              src={game.imageUrls[0]}
+              className={styles.image}
+            />
             <Item.Content>
               <Item.Header>{game.title}</Item.Header>
               <Item.Description>

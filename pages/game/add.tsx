@@ -87,7 +87,7 @@ const GameAddPage = () => {
       });
       console.log(res);
       if (res.status === 200) {
-        alert("게임이 업로드 되었습니다.");
+        alert("게임이 등록 되었습니다.");
         router.push("/");
       } else if (res.status === 409) {
         alert("이미 등록되어 있는 게임 ID 입니다.");

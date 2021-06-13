@@ -1,3 +1,20 @@
 .container {
-  padding: 2rem 200px;
+  max-width: 700px;
+  margin: 5em auto;
+}
+
+.header {
+  margin-bottom: 4em;
+}
+
+@media screen and (max-width: 700px) {
+  .container {
+    width: 100%;
+    padding: 2em;
+    margin: 0;
+  }
+
+  .header {
+    margin-bottom: 2em;
+  }
 }

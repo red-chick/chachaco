@@ -6,3 +6,15 @@
 .content {
   margin: 1em 0;
 }
+
+@media screen and (max-width: 700px) {
+  .container {
+    width: 100%;
+    padding: 2em;
+    margin: 0;
+  }
+
+  .content {
+    margin: 1em 0;
+  }
+}

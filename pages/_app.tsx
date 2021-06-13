@@ -1,5 +1,5 @@
 import { AppProps } from "next/app";
-import { Container } from "semantic-ui-react";
+import Head from "next/head";
 
 import Header from "../src/header/components/Header";
 
@@ -11,6 +11,12 @@ import UserContextProvider from "../src/common/contexts/UserContext";
 function App({ Component, pageProps }: AppProps) {
   return (
     <>
+      <Head>
+        <meta
+          name="viewport"
+          content="initial-scale=1.0, width=device-width, user-scalable=no"
+        />
+      </Head>
       <UserContextProvider>
         <Header />
         <main>

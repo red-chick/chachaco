@@ -5,6 +5,8 @@ import Header from "../src/header/components/Header";
 
 import "semantic-ui-css/semantic.min.css";
 import "../styles/globals.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import UserContextProvider from "../src/common/contexts/UserContext";
 

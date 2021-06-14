@@ -3,6 +3,8 @@ import {
   Dimmer,
   Form,
   Header,
+  Icon,
+  List,
   Loader,
   Message,
 } from "semantic-ui-react";
@@ -47,7 +49,7 @@ const GameAddPage = () => {
   const [pid, setPid] = useState("");
   const [content, setContent] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
+  const [images, setImages] = useState([]);
   const [maker, setMaker] = useState("");
   const [source, setSource] = useState("");
 
@@ -61,10 +63,7 @@ const GameAddPage = () => {
         .storage()
         .ref(`images/${filename}`)
         .getDownloadURL();
-      setImageUrl(url);
-      setUploadingImage(false);
-    } else {
-      setImageUrl("");
+      setImages((images) => [...images, { name: file.name, url }]);
       setUploadingImage(false);
     }
   };
@@ -84,7 +83,7 @@ const GameAddPage = () => {
           gid,
           pid,
           content: content.replace(/\r\n|\r|\n/g, "<br />"),
-          imageUrl,
+          imageUrls: images.map((image) => image.url),
           maker,
           source,
         }),
@@ -103,6 +102,10 @@ const GameAddPage = () => {
       alert("게임 등록에 실패하였습니다. 잠시후 다시 이용해주세요.");
       console.error(error);
     }
+  };
+
+  const removeImage = (index: number) => {
+    setImages((images) => images.filter((_, i) => index !== i));
   };
 
   if (!user)
@@ -153,7 +156,6 @@ const GameAddPage = () => {
             onChange={(e) => setPid(e.target.value)}
           />
         </Form.Field>
-
         <Form.Field>
           <label>게임 설명</label>
           <textarea
@@ -171,10 +173,22 @@ const GameAddPage = () => {
             accept="image/*"
           />
         </Form.Field>
+        <List>
+          {images.map((image, index) => (
+            <List.Item key={image.name}>
+              <Icon name="file image" className={styles.fileIcon} />
+              <List.Content verticalAlign="middle">
+                {image.name}
+                <Icon
+                  name="remove circle"
+                  className={styles.removeIcon}
+                  onClick={() => removeImage(index)}
+                />
+              </List.Content>
+            </List.Item>
+          ))}
+        </List>
         {uploadingImage && <Message>이미지를 업로드하는 중입니다...</Message>}
-        {imageUrl && (
-          <Message positive>이미지 업로드에 성공하였습니다.</Message>
-        )}
         <Form.Field>
           <label>제작자</label>
           <Form.Input

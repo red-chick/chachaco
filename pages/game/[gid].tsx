@@ -14,6 +14,7 @@ import {
 import { useUserContext } from "../../src/common/contexts/UserContext";
 import Comments from "../../src/games/components/Comments";
 import styles from "../../styles/game/game.module.css";
+import Slider from "react-slick";
 
 const addZero = (num: number): string => {
   return num < 10 ? "0" + num : "" + num;
@@ -26,6 +27,12 @@ const getKorDate = (createdSeconds: number) => {
   }.${date.getDate()} ${addZero(date.getHours())}:${addZero(
     date.getMinutes()
   )}:${addZero(date.getSeconds())}`;
+};
+
+const sliderSettings = {
+  infinite: true,
+  slidesToShow: 1,
+  slidesToScroll: 1,
 };
 
 const GamePage = () => {
@@ -127,7 +134,12 @@ const GamePage = () => {
           </>
         )}
       </p>
-      {game.imageUrls && <Image src={game.imageUrls[0]} size="huge" centered />}
+      <Slider {...sliderSettings}>
+        {game.imageUrls.map((imageUrl: string) => (
+          <Image src={imageUrl} size="huge" centered />
+        ))}
+      </Slider>
+      {/* {game.imageUrls && <Image src={game.imageUrls[0]} size="huge" centered />} */}
       {game.source && (
         <p className={styles.source}>
           출처: <a href={game.source}>{game.source}</a>

@@ -10,6 +10,9 @@
 .source {
   margin: 0.5em 0 1em;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media screen and (max-width: 700px) {

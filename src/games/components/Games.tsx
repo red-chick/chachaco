@@ -91,10 +91,10 @@ const Games = () => {
           className={styles.card}
           onClick={() => router.push(`/game/${game.gid}`)}
         >
-          {game.imageUrls[0] ? (
+          {game.images && game.images[0] ? (
             <Image
               className={styles.image}
-              src={game.imageUrls[0]}
+              src={game.images[0].url}
               wrapped
               ui={false}
             ></Image>

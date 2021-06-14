@@ -135,11 +135,11 @@ const GamePage = () => {
         )}
       </p>
       <Slider {...sliderSettings}>
-        {game.imageUrls.map((imageUrl: string) => (
-          <Image src={imageUrl} size="huge" centered />
-        ))}
+        {game.images &&
+          game.images.map((image) => (
+            <Image src={image.url} size="huge" centered />
+          ))}
       </Slider>
-      {/* {game.imageUrls && <Image src={game.imageUrls[0]} size="huge" centered />} */}
       {game.source && (
         <p className={styles.source}>
           출처: <a href={game.source}>{game.source}</a>

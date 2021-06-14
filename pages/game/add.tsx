@@ -63,7 +63,7 @@ const GameAddPage = () => {
         .storage()
         .ref(`images/${filename}`)
         .getDownloadURL();
-      setImages((images) => [...images, { name: file.name, url }]);
+      setImages((images) => [...images, { originName: file.name, url }]);
       setUploadingImage(false);
     }
   };
@@ -83,7 +83,7 @@ const GameAddPage = () => {
           gid,
           pid,
           content: content.replace(/\r\n|\r|\n/g, "<br />"),
-          imageUrls: images.map((image) => image.url),
+          images,
           maker,
           source,
         }),
@@ -175,10 +175,10 @@ const GameAddPage = () => {
         </Form.Field>
         <List>
           {images.map((image, index) => (
-            <List.Item key={image.name}>
+            <List.Item key={image.originName}>
               <Icon name="file image" className={styles.fileIcon} />
               <List.Content verticalAlign="middle">
-                {image.name}
+                {image.originName}
                 <Icon
                   name="remove circle"
                   className={styles.removeIcon}

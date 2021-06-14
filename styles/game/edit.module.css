@@ -1,10 +1,19 @@
 .container {
-  height: 100%;
   max-width: 450px;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  padding: 5em 0;
   justify-content: center;
+}
+
+.fileIcon {
+  padding: 0 !important;
+}
+
+.removeIcon {
+  padding-left: 1em;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 700px) {

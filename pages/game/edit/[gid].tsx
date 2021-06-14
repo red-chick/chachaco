@@ -6,6 +6,8 @@ import {
   Dimmer,
   Form,
   Header,
+  Icon,
+  List,
   Loader,
   Message,
 } from "semantic-ui-react";
@@ -48,7 +50,7 @@ const EditGamePage = () => {
   const [pid, setPid] = useState("");
   const [content, setContent] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
+  const [images, setImages] = useState([]);
   const [maker, setMaker] = useState("");
   const [source, setSource] = useState("");
   const [uid, setUid] = useState("");
@@ -63,7 +65,7 @@ const EditGamePage = () => {
         setGid(game.gid);
         setPid(game.pid);
         setContent(game.content.replace(/\<br \/\>/g, "\n"));
-        setImageUrl(game.imageUrls[0]);
+        setImages(game.images);
         setMaker(game.maker);
         setSource(game.source);
         setUid(game.uid);
@@ -85,10 +87,7 @@ const EditGamePage = () => {
         .storage()
         .ref(`images/${filename}`)
         .getDownloadURL();
-      setImageUrl(url);
-      setUploadingImage(false);
-    } else {
-      setImageUrl("");
+      setImages((images) => [...images, { originName: file.name, url }]);
       setUploadingImage(false);
     }
   };
@@ -106,7 +105,7 @@ const EditGamePage = () => {
           title,
           pid,
           content: content.replace(/\r\n|\r|\n/g, "<br />"),
-          imageUrl,
+          images,
         }),
       });
       console.log(res);
@@ -120,6 +119,10 @@ const EditGamePage = () => {
       alert("게임 수정에 실패하였습니다. 잠시후 다시 이용해주세요.");
       console.error(error);
     }
+  };
+
+  const removeImage = (index: number) => {
+    setImages((images) => images.filter((_, i) => index !== i));
   };
 
   if (!user || !docId)
@@ -149,7 +152,7 @@ const EditGamePage = () => {
           <input value={gid} readOnly></input>
         </Form.Field>
         <Form.Field>
-          <label>프로그래머 ID *</label>
+          <label>프로그래머 ID</label>
           <Form.Input
             fluid
             error={
@@ -163,7 +166,7 @@ const EditGamePage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>게임 설명 *</label>
+          <label>게임 설명</label>
           <textarea
             placeholder="게임 설명을 입력해주세요"
             value={content}
@@ -179,10 +182,22 @@ const EditGamePage = () => {
             accept="image/*"
           />
         </Form.Field>
+        <List>
+          {images.map((image, index) => (
+            <List.Item key={image.originName}>
+              <Icon name="file image" className={styles.fileIcon} />
+              <List.Content verticalAlign="middle">
+                {image.originName}
+                <Icon
+                  name="remove circle"
+                  className={styles.removeIcon}
+                  onClick={() => removeImage(index)}
+                />
+              </List.Content>
+            </List.Item>
+          ))}
+        </List>
         {uploadingImage && <Message>이미지를 업로드하는 중입니다...</Message>}
-        {imageUrl && (
-          <Message positive>이미지 업로드에 성공하였습니다.</Message>
-        )}
         <Form.Field>
           <label>제작자</label>
           <Form.Input

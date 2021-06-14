@@ -87,7 +87,11 @@ const EditGamePage = () => {
         .storage()
         .ref(`images/${filename}`)
         .getDownloadURL();
-      setImages((images) => [...images, { originName: file.name, url }]);
+      setImages((images) =>
+        !images
+          ? [{ originName: file.name, url }]
+          : [...images, { originName: file.name, url }]
+      );
       setUploadingImage(false);
     }
   };
@@ -183,19 +187,20 @@ const EditGamePage = () => {
           />
         </Form.Field>
         <List>
-          {images.map((image, index) => (
-            <List.Item key={image.originName}>
-              <Icon name="file image" className={styles.fileIcon} />
-              <List.Content verticalAlign="middle">
-                {image.originName}
-                <Icon
-                  name="remove circle"
-                  className={styles.removeIcon}
-                  onClick={() => removeImage(index)}
-                />
-              </List.Content>
-            </List.Item>
-          ))}
+          {images &&
+            images.map((image, index) => (
+              <List.Item key={image.originName}>
+                <Icon name="file image" className={styles.fileIcon} />
+                <List.Content verticalAlign="middle">
+                  {image.originName}
+                  <Icon
+                    name="remove circle"
+                    className={styles.removeIcon}
+                    onClick={() => removeImage(index)}
+                  />
+                </List.Content>
+              </List.Item>
+            ))}
         </List>
         {uploadingImage && <Message>이미지를 업로드하는 중입니다...</Message>}
         <Form.Field>

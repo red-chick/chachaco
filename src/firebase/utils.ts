@@ -49,11 +49,18 @@ export const getCollection = async (collection: string, orderBy?: OrderBy) => {
   return data;
 };
 
-export const getCollectionWhere = async (collection: string, where: Where) => {
+export const getCollectionWhere = async (
+  collection: string,
+  where: Where,
+  orderBy?: OrderBy
+) => {
   const ref = firestore.collection(collection);
-  const snapshot = await ref
-    .where(where.fieldPath, where.opStr, where.value)
-    .get();
+  const snapshot = orderBy
+    ? await ref
+        .where(where.fieldPath, where.opStr, where.value)
+        .orderBy(orderBy.fieldPath, orderBy.directionStr)
+        .get()
+    : await ref.where(where.fieldPath, where.opStr, where.value).get();
 
   if (snapshot.empty) return;
 

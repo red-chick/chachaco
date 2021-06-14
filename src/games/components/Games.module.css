@@ -1,4 +1,17 @@
 .image {
-  align-self: flex-start !important;
-  margin: auto 0 !important;
+  height: 163px !important;
+}
+
+.image > img {
+  height: 100% !important;
+}
+
+@media screen and (max-width: 700px) {
+  .card {
+    width: 100% !important;
+  }
+
+  .image {
+    height: auto !important;
+  }
 }

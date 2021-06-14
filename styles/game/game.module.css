@@ -1,10 +1,19 @@
 .container {
   max-width: 700px;
-  margin: 5em auto;
+  margin: 0 auto;
+  padding: 5em 0;
 }
 
 .content {
   margin: 1em 0;
+}
+
+.source {
+  margin: 0.5em 0 1em;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media screen and (max-width: 700px) {

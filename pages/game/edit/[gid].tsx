@@ -1,3 +1,6 @@
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import {
   Button,
   Dimmer,
@@ -8,13 +11,10 @@ import {
   Loader,
   Message,
 } from "semantic-ui-react";
+import { useUserContext } from "../../../src/common/contexts/UserContext";
+import styles from "../../../styles/game/edit.module.css";
 import firebase from "firebase";
-
-import styles from "../../styles/game/add.module.css";
-import { useState } from "react";
-import { useUserContext } from "../../src/common/contexts/UserContext";
-import { useRouter } from "next/router";
-import Head from "next/head";
+import game from "../../api/game";
 
 function getExt(filename: string) {
   return filename
@@ -38,12 +38,13 @@ export const checkPid = (gid: string) => {
   return true;
 };
 
-const GameAddPage = () => {
+const EditGamePage = () => {
   const router = useRouter();
   const {
     state: { user },
   } = useUserContext();
 
+  const [docId, setDocId] = useState("");
   const [title, setTitle] = useState("");
   const [gid, setGid] = useState("");
   const [pid, setPid] = useState("");
@@ -52,6 +53,29 @@ const GameAddPage = () => {
   const [images, setImages] = useState([]);
   const [maker, setMaker] = useState("");
   const [source, setSource] = useState("");
+  const [uid, setUid] = useState("");
+
+  useEffect(() => {
+    if (router.query.gid) {
+      (async () => {
+        const res = await fetch(`/api/game/${router.query.gid}`);
+        const game = await res.json();
+        setDocId(game.id);
+        setTitle(game.title);
+        setGid(game.gid);
+        setPid(game.pid);
+        setContent(game.content.replace(/\<br \/\>/g, "\n"));
+        setImages(game.images);
+        setMaker(game.maker);
+        setSource(game.source);
+        setUid(game.uid);
+      })();
+    }
+  }, [router.query.gid]);
+
+  useEffect(() => {
+    if (user && uid && user.uid !== uid) router.push("/");
+  }, [user, uid]);
 
   const uploadFile = async (e) => {
     const file = e.target.files[0];
@@ -63,43 +87,40 @@ const GameAddPage = () => {
         .storage()
         .ref(`images/${filename}`)
         .getDownloadURL();
-      setImages((images) => [...images, { originName: file.name, url }]);
+      setImages((images) =>
+        !images
+          ? [{ originName: file.name, url }]
+          : [...images, { originName: file.name, url }]
+      );
       setUploadingImage(false);
     }
   };
 
   const submit = async () => {
-    if (!title || !gid) return;
+    if (!docId || !title || !gid) return;
     try {
-      const res = await fetch("/api/game", {
-        method: "POST",
+      const res = await fetch(`/api/game/${docId}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          uid: user.uid,
-          uname: user.displayName,
+          docId,
           title,
-          gid,
           pid,
           content: content.replace(/\r\n|\r|\n/g, "<br />"),
           images,
-          maker,
-          source,
         }),
       });
       console.log(res);
       if (res.status === 200) {
-        alert("게임이 등록 되었습니다.");
         router.push(`/game/${gid}`);
-      } else if (res.status === 409) {
-        alert("이미 등록되어 있는 게임 ID 입니다.");
       } else {
-        alert("게임 등록에 실패하였습니다. 잠시후 다시 이용해주세요.");
+        alert("게임 수정에 실패하였습니다. 잠시후 다시 이용해주세요.");
         console.error(res.statusText);
       }
     } catch (error) {
-      alert("게임 등록에 실패하였습니다. 잠시후 다시 이용해주세요.");
+      alert("게임 수정에 실패하였습니다. 잠시후 다시 이용해주세요.");
       console.error(error);
     }
   };
@@ -108,7 +129,7 @@ const GameAddPage = () => {
     setImages((images) => images.filter((_, i) => index !== i));
   };
 
-  if (!user)
+  if (!user || !docId)
     return (
       <Dimmer active>
         <Loader />
@@ -118,9 +139,9 @@ const GameAddPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>게임 등록 - 차근차근 게임 공유 커뮤니티</title>
+        <title>게임 수정 - 차근차근 게임 공유 커뮤니티</title>
       </Head>
-      <Header size="huge">게임 등록</Header>
+      <Header size="huge">게임 수정</Header>
       <Form onSubmit={submit}>
         <Form.Field>
           <label>게임 제목 *</label>
@@ -131,16 +152,8 @@ const GameAddPage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>게임 ID *</label>
-          <Form.Input
-            fluid
-            error={
-              gid && !checkGid(gid) ? "게임 ID 형식이 올바르지 않습니다." : null
-            }
-            placeholder="G-000-000-000"
-            value={gid}
-            onChange={(e) => setGid(e.target.value)}
-          />
+          <label>게임 ID (수정 불가) *</label>
+          <input value={gid} readOnly></input>
         </Form.Field>
         <Form.Field>
           <label>프로그래머 ID</label>
@@ -165,7 +178,7 @@ const GameAddPage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>이미지 추가 (16:9 사이즈 권장)</label>
+          <label>이미지 추가</label>
           <input
             type="file"
             name="file"
@@ -174,19 +187,20 @@ const GameAddPage = () => {
           />
         </Form.Field>
         <List>
-          {images.map((image, index) => (
-            <List.Item key={image.originName}>
-              <Icon name="file image" className={styles.fileIcon} />
-              <List.Content verticalAlign="middle">
-                {image.originName}
-                <Icon
-                  name="remove circle"
-                  className={styles.removeIcon}
-                  onClick={() => removeImage(index)}
-                />
-              </List.Content>
-            </List.Item>
-          ))}
+          {images &&
+            images.map((image, index) => (
+              <List.Item key={image.originName}>
+                <Icon name="file image" className={styles.fileIcon} />
+                <List.Content verticalAlign="middle">
+                  {image.originName}
+                  <Icon
+                    name="remove circle"
+                    className={styles.removeIcon}
+                    onClick={() => removeImage(index)}
+                  />
+                </List.Content>
+              </List.Item>
+            ))}
         </List>
         {uploadingImage && <Message>이미지를 업로드하는 중입니다...</Message>}
         <Form.Field>
@@ -217,11 +231,11 @@ const GameAddPage = () => {
             (pid && !checkPid(pid))
           }
         >
-          등록
+          수정
         </Button>
       </Form>
     </div>
   );
 };
 
-export default GameAddPage;
+export default EditGamePage;

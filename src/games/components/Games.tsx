@@ -1,13 +1,14 @@
-import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import {
   Button,
+  Card,
   Dimmer,
   Icon,
   Image,
-  Item,
   Label,
   Loader,
+  Menu,
 } from "semantic-ui-react";
 import useSWR, { trigger } from "swr";
 import { useUserContext } from "../../common/contexts/UserContext";
@@ -35,10 +36,12 @@ const Games = () => {
   const {
     state: { user },
   } = useUserContext();
+  const router = useRouter();
 
+  const [order, setOrder] = useState<"createdAt" | "likesCount">("createdAt");
   const [loadingLikes, setLoadingLikes] = useState([]);
 
-  const { data } = useSWR("/api/games", fetcher);
+  const { data } = useSWR(`/api/games?order=${order}`, fetcher);
 
   if (!data)
     return (
@@ -81,65 +84,101 @@ const Games = () => {
     setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
   };
 
+  const changeMenu = async (order: "createdAt" | "likesCount") => {
+    setOrder(order);
+  };
+
   return (
-    <Item.Group divided>
-      {data.map((game) => (
-        <Link href={`/game/${game.gid}`}>
-          <Item style={{ cursor: "pointer" }}>
-            <Image
-              size="small"
-              src={game.imageUrls[0]}
-              className={styles.image}
-            />
-            <Item.Content>
-              <Item.Header>{game.title}</Item.Header>
-              <Item.Description>
-                {getKorDate(game.createdAt._seconds)}
-              </Item.Description>
-              <Item.Description>
-                <strong>{game.gid}</strong> | <strong>{game.pid}</strong>
-              </Item.Description>
-              <Item.Extra>
-                <Button as="div" labelPosition="left">
-                  <Label
-                    as="a"
-                    basic
-                    color={
-                      user && game.likesUids.includes(user.uid) ? "red" : null
-                    }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (!user || loadingLikes.includes(game.id)) return;
-                      game.likesUids.includes(user.uid)
-                        ? unlike(game.id)
-                        : like(game.id);
-                    }}
-                  >
-                    {game.likesCount}
-                  </Label>
-                  <Button
-                    icon
-                    loading={loadingLikes.includes(game.id)}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (!user || loadingLikes.includes(game.id)) return;
-                      game.likesUids.includes(user.uid)
-                        ? unlike(game.id)
-                        : like(game.id);
-                    }}
-                    color={
-                      user && game.likesUids.includes(user.uid) ? "red" : null
-                    }
-                  >
-                    <Icon name="heart" />
-                  </Button>
+    <>
+      <Menu tabular>
+        <Menu.Item
+          name="최신순"
+          active={order === "createdAt"}
+          onClick={() => changeMenu("createdAt")}
+        />
+        <Menu.Item
+          name="인기순"
+          active={order === "likesCount"}
+          onClick={() => changeMenu("likesCount")}
+        />
+      </Menu>
+      <Card.Group>
+        {data.map((game) => (
+          <Card
+            key={game.id}
+            className={styles.card}
+            onClick={() => router.push(`/game/${game.gid}`)}
+          >
+            {game.images && game.images[0] ? (
+              <Image
+                className={styles.image}
+                src={game.images[0].url}
+                wrapped
+                ui={false}
+              ></Image>
+            ) : (
+              <Image
+                className={styles.image}
+                src="/error-image-generic.png"
+                wrapped
+                ui={false}
+              ></Image>
+            )}
+            <Card.Content>
+              <Card.Header>{game.title}</Card.Header>
+              <Card.Meta>
+                {game.maker && <span>{game.maker} |</span>}
+                <span>{getKorDate(game.createdAt._seconds)}</span>
+              </Card.Meta>
+              <Card.Description>
+                <strong>{game.gid}</strong>{" "}
+                {game.pid && (
+                  <>
+                    | <strong>{game.pid}</strong>
+                  </>
+                )}
+              </Card.Description>
+            </Card.Content>
+            <Card.Content extra>
+              <Button as="div" labelPosition="left">
+                <Label
+                  as="a"
+                  basic
+                  color={
+                    user && game.likesUids.includes(user.uid) ? "red" : null
+                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!user || loadingLikes.includes(game.id)) return;
+                    game.likesUids.includes(user.uid)
+                      ? unlike(game.id)
+                      : like(game.id);
+                  }}
+                >
+                  {game.likesCount}
+                </Label>
+                <Button
+                  icon
+                  loading={loadingLikes.includes(game.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!user || loadingLikes.includes(game.id)) return;
+                    game.likesUids.includes(user.uid)
+                      ? unlike(game.id)
+                      : like(game.id);
+                  }}
+                  color={
+                    user && game.likesUids.includes(user.uid) ? "red" : null
+                  }
+                >
+                  <Icon name="heart" />
                 </Button>
-              </Item.Extra>
-            </Item.Content>
-          </Item>
-        </Link>
-      ))}
-    </Item.Group>
+              </Button>
+            </Card.Content>
+          </Card>
+        ))}
+      </Card.Group>
+    </>
   );
 };
 

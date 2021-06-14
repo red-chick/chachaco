@@ -17,6 +17,15 @@ export const addDoc = async (collection: string, data: any) => {
   return docRef;
 };
 
+export const updateDoc = async (
+  collection: string,
+  docId: string,
+  data: any
+) => {
+  const docRef = await firestore.collection(collection).doc(docId).update(data);
+  return docRef;
+};
+
 export const addArrayDoc = async (
   collection: string,
   docId: string,
@@ -26,6 +35,11 @@ export const addArrayDoc = async (
     .collection(collection)
     .doc(docId)
     .update(updateData);
+  return docRef;
+};
+
+export const deleteDoc = async (collection: string, docId: string) => {
+  const docRef = await firestore.collection(collection).doc(docId).delete();
   return docRef;
 };
 
@@ -49,11 +63,18 @@ export const getCollection = async (collection: string, orderBy?: OrderBy) => {
   return data;
 };
 
-export const getCollectionWhere = async (collection: string, where: Where) => {
+export const getCollectionWhere = async (
+  collection: string,
+  where: Where,
+  orderBy?: OrderBy
+) => {
   const ref = firestore.collection(collection);
-  const snapshot = await ref
-    .where(where.fieldPath, where.opStr, where.value)
-    .get();
+  const snapshot = orderBy
+    ? await ref
+        .where(where.fieldPath, where.opStr, where.value)
+        .orderBy(orderBy.fieldPath, orderBy.directionStr)
+        .get()
+    : await ref.where(where.fieldPath, where.opStr, where.value).get();
 
   if (snapshot.empty) return;
 

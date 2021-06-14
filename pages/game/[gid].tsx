@@ -1,6 +1,7 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Dimmer,
@@ -10,15 +11,10 @@ import {
   Label,
   Loader,
 } from "semantic-ui-react";
-import useSWR, { trigger } from "swr";
 import { useUserContext } from "../../src/common/contexts/UserContext";
 import Comments from "../../src/games/components/Comments";
-import styles from "../../styles/game/gid.module.css";
-
-const fetcher = async (input: RequestInfo, init: RequestInit) => {
-  const res = await fetch(input, init);
-  return res.json();
-};
+import styles from "../../styles/game/game.module.css";
+import Slider from "react-slick";
 
 const addZero = (num: number): string => {
   return num < 10 ? "0" + num : "" + num;
@@ -33,22 +29,33 @@ const getKorDate = (createdSeconds: number) => {
   )}:${addZero(date.getSeconds())}`;
 };
 
+const sliderSettings = {
+  infinite: true,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+};
+
 const GamePage = () => {
   const router = useRouter();
   const {
     state: { user },
   } = useUserContext();
 
+  const [game, setGame] = useState(null);
   const [loadingLikes, setLoadingLikes] = useState([]);
+  const [loadingRemove, setLoadingRemove] = useState(false);
 
-  const { data: game } = useSWR(`/api/game/${router.query.gid}`, fetcher);
+  const fetchGame = async () => {
+    const res = await fetch(`/api/game/${router.query.gid}`);
+    const game = await res.json();
+    setGame(game);
+  };
 
-  if (!game)
-    return (
-      <Dimmer active>
-        <Loader />
-      </Dimmer>
-    );
+  useEffect(() => {
+    if (router.query.gid) {
+      fetchGame();
+    }
+  }, [router.query.gid]);
 
   const like = async (id: string) => {
     setLoadingLikes((ids) => [...ids, id]);
@@ -63,7 +70,7 @@ const GamePage = () => {
         uid: user.uid,
       }),
     });
-    await trigger(`/api/game/${router.query.gid}`);
+    await fetchGame();
     setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
   };
 
@@ -80,9 +87,34 @@ const GamePage = () => {
         uid: user.uid,
       }),
     });
-    await trigger(`/api/game/${router.query.gid}`);
+    await fetchGame();
     setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
   };
+
+  const remove = async () => {
+    if (loadingRemove) return;
+
+    try {
+      setLoadingRemove(true);
+
+      await fetch(`/api/game/${game.id}`, {
+        method: "DELETE",
+      });
+
+      alert("삭제에 성공하였습니다.");
+
+      router.push("/");
+    } catch (error) {
+      alert("삭제에 실패하였습니다. 잠시 후 다시 이용해주세요.");
+    }
+  };
+
+  if (!game || !user)
+    return (
+      <Dimmer active>
+        <Loader />
+      </Dimmer>
+    );
 
   return (
     <div className={styles.container}>
@@ -90,11 +122,29 @@ const GamePage = () => {
         <title>{game.title} - 차근차근 게임 공유 커뮤니티</title>
       </Head>
       <Header size="huge">{game.title}</Header>
-      <p>{getKorDate(game.createdAt._seconds)}</p>
       <p>
-        <strong>{game.gid}</strong> | <strong>{game.pid}</strong>
+        {game.maker && <span>{game.maker} | </span>}
+        {getKorDate(game.createdAt._seconds)}
       </p>
-      {game.imageUrls && <Image src={game.imageUrls[0]} size="huge" centered />}
+      <p>
+        <strong>{game.gid}</strong>{" "}
+        {game.pid && (
+          <>
+            | <strong>{game.pid}</strong>
+          </>
+        )}
+      </p>
+      <Slider {...sliderSettings}>
+        {game.images &&
+          game.images.map((image) => (
+            <Image src={image.url} size="huge" centered />
+          ))}
+      </Slider>
+      {game.source && (
+        <p className={styles.source}>
+          출처: <a href={game.source}>{game.source}</a>
+        </p>
+      )}
       <p
         className={styles.content}
         dangerouslySetInnerHTML={{ __html: game.content }}
@@ -125,6 +175,17 @@ const GamePage = () => {
           <Icon name="heart" />
         </Button>
       </Button>
+      {user && game && user.uid === game.uid && (
+        <>
+          <Button floated="right" onClick={remove} loading={loadingRemove}>
+            삭제
+          </Button>
+          <Link href={`/game/edit/${game.gid}`}>
+            <Button floated="right">수정</Button>
+          </Link>
+        </>
+      )}
+
       <Comments game={game} />
     </div>
   );

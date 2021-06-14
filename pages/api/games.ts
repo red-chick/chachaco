@@ -4,9 +4,10 @@ import { getCollection } from "../../src/firebase/utils";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
+    const { order } = req.query;
     try {
       const data = await getCollection("games", {
-        fieldPath: "createdAt",
+        fieldPath: order as string,
         directionStr: "desc",
       });
       res.status(200).json(data);

@@ -119,7 +119,7 @@ const GamePage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>{game.title} - 차근차근 게임 공유 커뮤니티</title>
+        <title>{game.title} - 차차코 게임 공유</title>
       </Head>
       <Header size="huge">{game.title}</Header>
       <p>

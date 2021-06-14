@@ -140,7 +140,7 @@ const EditGamePage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>게임 수정 - 차근차근 게임 공유 커뮤니티</title>
+        <title>게임 수정 - 차차코 게임 공유</title>
       </Head>
       <Header size="huge">게임 수정</Header>
       <Form onSubmit={submit}>

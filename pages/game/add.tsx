@@ -117,7 +117,7 @@ const GameAddPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>게임 등록 - 차근차근 게임 공유 커뮤니티</title>
+        <title>게임 등록 - 차차코 게임 공유</title>
       </Head>
       <Header size="huge">게임 등록</Header>
       <Form onSubmit={submit}>

@@ -142,7 +142,10 @@ const GamePage = () => {
       </Slider>
       {game.source && (
         <p className={styles.source}>
-          출처: <a href={game.source}>{game.source}</a>
+          출처:{" "}
+          <a href={game.source} target="_blank">
+            {game.source}
+          </a>
         </p>
       )}
       <p

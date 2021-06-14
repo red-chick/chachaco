@@ -63,7 +63,7 @@ const Games = () => {
         uid: user.uid,
       }),
     });
-    await trigger("/api/games");
+    await trigger(`/api/games?order=${order}`);
     setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
   };
 
@@ -80,7 +80,7 @@ const Games = () => {
         uid: user.uid,
       }),
     });
-    await trigger("/api/games");
+    await trigger(`/api/games?order=${order}`);
     setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
   };
 

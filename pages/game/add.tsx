@@ -48,6 +48,8 @@ const GameAddPage = () => {
   const [content, setContent] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
+  const [maker, setMaker] = useState("");
+  const [source, setSource] = useState("");
 
   const uploadFile = async (e) => {
     const file = e.target.files[0];
@@ -68,7 +70,7 @@ const GameAddPage = () => {
   };
 
   const submit = async () => {
-    if (!title || !gid || !pid || !content) return;
+    if (!title || !gid) return;
     try {
       const res = await fetch("/api/game", {
         method: "POST",
@@ -83,6 +85,8 @@ const GameAddPage = () => {
           pid,
           content: content.replace(/\r\n|\r|\n/g, "<br />"),
           imageUrl,
+          maker,
+          source,
         }),
       });
       console.log(res);
@@ -136,7 +140,7 @@ const GameAddPage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>프로그래머 ID *</label>
+          <label>프로그래머 ID</label>
           <Form.Input
             fluid
             error={
@@ -149,8 +153,9 @@ const GameAddPage = () => {
             onChange={(e) => setPid(e.target.value)}
           />
         </Form.Field>
+
         <Form.Field>
-          <label>게임 설명 *</label>
+          <label>게임 설명</label>
           <textarea
             placeholder="게임 설명을 입력해주세요"
             value={content}
@@ -158,7 +163,7 @@ const GameAddPage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>이미지 추가</label>
+          <label>이미지 추가 (16:9 사이즈 권장)</label>
           <input
             type="file"
             name="file"
@@ -170,16 +175,32 @@ const GameAddPage = () => {
         {imageUrl && (
           <Message positive>이미지 업로드에 성공하였습니다.</Message>
         )}
+        <Form.Field>
+          <label>제작자</label>
+          <Form.Input
+            fluid
+            placeholder="제작자의 이름을 입력해주세요"
+            value={maker}
+            onChange={(e) => setMaker(e.target.value)}
+          />
+        </Form.Field>
+        <Form.Field>
+          <label>출처</label>
+          <Form.Input
+            fluid
+            placeholder="출처를 입력해주세요"
+            value={source}
+            onChange={(e) => setSource(e.target.value)}
+          />
+        </Form.Field>
         <Button
           type="submit"
           disabled={
             !title ||
             !gid ||
-            !pid ||
-            !content ||
             uploadingImage ||
             !checkGid(gid) ||
-            !checkPid(pid)
+            (pid && !checkPid(pid))
           }
         >
           등록

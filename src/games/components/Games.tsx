@@ -91,14 +91,34 @@ const Games = () => {
           className={styles.card}
           onClick={() => router.push(`/game/${game.gid}`)}
         >
-          <Image src={game.imageUrls[0]} wrapped ui={false} />
+          {game.imageUrls[0] ? (
+            <Image
+              className={styles.image}
+              src={game.imageUrls[0]}
+              wrapped
+              ui={false}
+            ></Image>
+          ) : (
+            <Image
+              className={styles.image}
+              src="/error-image-generic.png"
+              wrapped
+              ui={false}
+            ></Image>
+          )}
           <Card.Content>
             <Card.Header>{game.title}</Card.Header>
             <Card.Meta>
+              {game.maker && <span>{game.maker} |</span>}
               <span>{getKorDate(game.createdAt._seconds)}</span>
             </Card.Meta>
             <Card.Description>
-              <strong>{game.gid}</strong> | <strong>{game.pid}</strong>
+              <strong>{game.gid}</strong>{" "}
+              {game.pid && (
+                <>
+                  | <strong>{game.pid}</strong>
+                </>
+              )}
             </Card.Description>
           </Card.Content>
           <Card.Content extra>

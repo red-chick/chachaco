@@ -13,7 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
       {
         fieldPath: "createdAt",
-        directionStr: "desc",
+        directionStr: "asc",
       }
     );
     res.json(data);

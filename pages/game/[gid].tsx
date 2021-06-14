@@ -11,10 +11,9 @@ import {
   Label,
   Loader,
 } from "semantic-ui-react";
-import useSWR, { trigger } from "swr";
 import { useUserContext } from "../../src/common/contexts/UserContext";
 import Comments from "../../src/games/components/Comments";
-import styles from "../../styles/game/gid.module.css";
+import styles from "../../styles/game/game.module.css";
 
 const addZero = (num: number): string => {
   return num < 10 ? "0" + num : "" + num;
@@ -39,22 +38,17 @@ const GamePage = () => {
   const [loadingLikes, setLoadingLikes] = useState([]);
   const [loadingRemove, setLoadingRemove] = useState(false);
 
+  const fetchGame = async () => {
+    const res = await fetch(`/api/game/${router.query.gid}`);
+    const game = await res.json();
+    setGame(game);
+  };
+
   useEffect(() => {
     if (router.query.gid) {
-      (async () => {
-        const res = await fetch(`/api/game/${router.query.gid}`);
-        const game = await res.json();
-        setGame(game);
-      })();
+      fetchGame();
     }
   }, [router.query.gid]);
-
-  if (!game)
-    return (
-      <Dimmer active>
-        <Loader />
-      </Dimmer>
-    );
 
   const like = async (id: string) => {
     setLoadingLikes((ids) => [...ids, id]);
@@ -69,7 +63,7 @@ const GamePage = () => {
         uid: user.uid,
       }),
     });
-    await trigger(`/api/game/${router.query.gid}`);
+    await fetchGame();
     setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
   };
 
@@ -86,7 +80,7 @@ const GamePage = () => {
         uid: user.uid,
       }),
     });
-    await trigger(`/api/game/${router.query.gid}`);
+    await fetchGame();
     setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
   };
 
@@ -108,17 +102,37 @@ const GamePage = () => {
     }
   };
 
+  if (!game || !user)
+    return (
+      <Dimmer active>
+        <Loader />
+      </Dimmer>
+    );
+
   return (
     <div className={styles.container}>
       <Head>
         <title>{game.title} - 차근차근 게임 공유 커뮤니티</title>
       </Head>
       <Header size="huge">{game.title}</Header>
-      <p>{getKorDate(game.createdAt._seconds)}</p>
       <p>
-        <strong>{game.gid}</strong> | <strong>{game.pid}</strong>
+        {game.maker && <span>{game.maker} | </span>}
+        {getKorDate(game.createdAt._seconds)}
+      </p>
+      <p>
+        <strong>{game.gid}</strong>{" "}
+        {game.pid && (
+          <>
+            | <strong>{game.pid}</strong>
+          </>
+        )}
       </p>
       {game.imageUrls && <Image src={game.imageUrls[0]} size="huge" centered />}
+      {game.source && (
+        <p className={styles.source}>
+          출처: <a href={game.source}>{game.source}</a>
+        </p>
+      )}
       <p
         className={styles.content}
         dangerouslySetInnerHTML={{ __html: game.content }}
@@ -149,7 +163,7 @@ const GamePage = () => {
           <Icon name="heart" />
         </Button>
       </Button>
-      {user.uid === game.uid && (
+      {user && game && user.uid === game.uid && (
         <>
           <Button floated="right" onClick={remove} loading={loadingRemove}>
             삭제

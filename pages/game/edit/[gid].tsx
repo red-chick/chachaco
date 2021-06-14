@@ -49,6 +49,8 @@ const EditGamePage = () => {
   const [content, setContent] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
+  const [maker, setMaker] = useState("");
+  const [source, setSource] = useState("");
   const [uid, setUid] = useState("");
 
   useEffect(() => {
@@ -62,6 +64,8 @@ const EditGamePage = () => {
         setPid(game.pid);
         setContent(game.content.replace(/\<br \/\>/g, "\n"));
         setImageUrl(game.imageUrls[0]);
+        setMaker(game.maker);
+        setSource(game.source);
         setUid(game.uid);
       })();
     }
@@ -90,7 +94,7 @@ const EditGamePage = () => {
   };
 
   const submit = async () => {
-    if (!docId || !title || !gid || !pid || !content) return;
+    if (!docId || !title || !gid) return;
     try {
       const res = await fetch(`/api/game/${docId}`, {
         method: "PATCH",
@@ -179,16 +183,32 @@ const EditGamePage = () => {
         {imageUrl && (
           <Message positive>이미지 업로드에 성공하였습니다.</Message>
         )}
+        <Form.Field>
+          <label>제작자</label>
+          <Form.Input
+            fluid
+            placeholder="제작자의 이름을 입력해주세요"
+            value={maker}
+            onChange={(e) => setMaker(e.target.value)}
+          />
+        </Form.Field>
+        <Form.Field>
+          <label>출처</label>
+          <Form.Input
+            fluid
+            placeholder="출처를 입력해주세요"
+            value={source}
+            onChange={(e) => setSource(e.target.value)}
+          />
+        </Form.Field>
         <Button
           type="submit"
           disabled={
             !title ||
             !gid ||
-            !pid ||
-            !content ||
             uploadingImage ||
             !checkGid(gid) ||
-            !checkPid(pid)
+            (pid && !checkPid(pid))
           }
         >
           수정

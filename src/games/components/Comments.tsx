@@ -63,7 +63,7 @@ const Comments = ({ game }) => {
         comments.map((comment) => (
           <Comment key={comment.id}>
             <Comment.Content>
-              <Comment.Author as="a">익명의 댓글</Comment.Author>
+              <Comment.Author as="a">익명</Comment.Author>
               <Comment.Metadata>
                 <div>{getKorDate(comment.createdAt._seconds)}</div>
               </Comment.Metadata>

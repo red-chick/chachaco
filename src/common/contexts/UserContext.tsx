@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import {
   createContext,
   Dispatch,
@@ -102,9 +101,6 @@ export const dispatchGetUserNoAuth = (dispatch: Dispatch<ActionType>): void => {
 
 type UserContextValue = {
   state: StateType;
-  dispatch: Dispatch<ActionType>;
-  login: (email: string, password: string) => void;
-  logout: () => void;
 };
 
 const UserContext = createContext<UserContextValue>({} as UserContextValue);
@@ -119,52 +115,40 @@ const asyncGetFirebaseApp = async () => {
 };
 
 export const UserContextProvider: React.FC<Props> = ({ children }: Props) => {
-  const router = useRouter();
   const [state, dispatch] = useReducer(userReducer, initialState);
 
   useEffect(() => {
-    const fetchAuth = async () => {
+    (async () => {
       try {
         const firebaseApp = await asyncGetFirebaseApp();
         firebaseApp.auth().onAuthStateChanged((user) => {
           if (user) {
             dispatchGetUserSuccess(dispatch, user);
-            if (router.pathname === "/login" || router.pathname === "/signup")
-              router.push("/");
           } else {
-            if (router.pathname === "/game/add") router.push("/");
             dispatchGetUserNoAuth(dispatch);
           }
         });
       } catch (error) {
         dispatchGetUserError(dispatch, error);
       }
-    };
-
-    fetchAuth();
+    })();
   }, []);
 
-  const login = async (email: string, password: string) => {
-    const firebaseApp = await asyncGetFirebaseApp();
-    const { user } = await firebaseApp
-      .auth()
-      .signInWithEmailAndPassword(email, password);
-    dispatchGetUserSuccess(dispatch, user);
-  };
-
-  const logout = async () => {
-    const firebaseApp = await asyncGetFirebaseApp();
-    firebaseApp.auth().signOut();
-    if (router.pathname === "/game/add") router.push("/");
-  };
+  useEffect(() => {
+    (async () => {
+      try {
+        const firebaseApp = await asyncGetFirebaseApp();
+        await firebaseApp.auth().signInAnonymously();
+      } catch (error) {
+        dispatchGetUserError(dispatch, error);
+      }
+    })();
+  }, []);
 
   return (
     <UserContext.Provider
       value={{
         state,
-        dispatch,
-        login,
-        logout,
       }}
     >
       {children}

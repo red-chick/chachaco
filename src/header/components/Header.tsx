@@ -6,11 +6,8 @@ import { useRouter } from "next/router";
 const Header = () => {
   const router = useRouter();
   const {
-    state: { user, loading },
-    logout,
+    state: { user },
   } = useUserContext();
-
-  console.log(router.pathname);
 
   return (
     <Menu fixed={"top"} size="large">
@@ -24,23 +21,11 @@ const Header = () => {
           {user && (
             <>
               <Link href="/game/add">
-                <Button icon>
-                  <Icon name="plus" />
-                </Button>
-              </Link>
-              <Button onClick={() => logout()} style={{ marginLeft: "0.5em" }}>
-                로그아웃
-              </Button>
-            </>
-          )}
-          {!loading && !user && (
-            <>
-              <Link href="/login">
-                <Button>로그인</Button>
-              </Link>
-              <Link href="/signup">
-                <Button primary={true} style={{ marginLeft: "0.5em" }}>
-                  회원가입
+                <Button animated="vertical">
+                  <Button.Content hidden>게임 등록</Button.Content>
+                  <Button.Content visible>
+                    <Icon name="plus" />
+                  </Button.Content>
                 </Button>
               </Link>
             </>

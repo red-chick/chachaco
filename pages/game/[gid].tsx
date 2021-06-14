@@ -1,6 +1,7 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Dimmer,
@@ -14,11 +15,6 @@ import useSWR, { trigger } from "swr";
 import { useUserContext } from "../../src/common/contexts/UserContext";
 import Comments from "../../src/games/components/Comments";
 import styles from "../../styles/game/gid.module.css";
-
-const fetcher = async (input: RequestInfo, init: RequestInit) => {
-  const res = await fetch(input, init);
-  return res.json();
-};
 
 const addZero = (num: number): string => {
   return num < 10 ? "0" + num : "" + num;
@@ -39,9 +35,19 @@ const GamePage = () => {
     state: { user },
   } = useUserContext();
 
+  const [game, setGame] = useState(null);
   const [loadingLikes, setLoadingLikes] = useState([]);
+  const [loadingRemove, setLoadingRemove] = useState(false);
 
-  const { data: game } = useSWR(`/api/game/${router.query.gid}`, fetcher);
+  useEffect(() => {
+    if (router.query.gid) {
+      (async () => {
+        const res = await fetch(`/api/game/${router.query.gid}`);
+        const game = await res.json();
+        setGame(game);
+      })();
+    }
+  }, [router.query.gid]);
 
   if (!game)
     return (
@@ -82,6 +88,24 @@ const GamePage = () => {
     });
     await trigger(`/api/game/${router.query.gid}`);
     setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
+  };
+
+  const remove = async () => {
+    if (loadingRemove) return;
+
+    try {
+      setLoadingRemove(true);
+
+      await fetch(`/api/game/${game.id}`, {
+        method: "DELETE",
+      });
+
+      alert("삭제에 성공하였습니다.");
+
+      router.push("/");
+    } catch (error) {
+      alert("삭제에 실패하였습니다. 잠시 후 다시 이용해주세요.");
+    }
   };
 
   return (
@@ -125,6 +149,17 @@ const GamePage = () => {
           <Icon name="heart" />
         </Button>
       </Button>
+      {user.uid === game.uid && (
+        <>
+          <Button floated="right" onClick={remove} loading={loadingRemove}>
+            삭제
+          </Button>
+          <Link href={`/game/edit/${game.gid}`}>
+            <Button floated="right">수정</Button>
+          </Link>
+        </>
+      )}
+
       <Comments game={game} />
     </div>
   );

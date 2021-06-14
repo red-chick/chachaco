@@ -30,6 +30,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       likesUids: [],
       likesCount: 0,
     });
+
     res.status(200).json(data);
   } else {
     res.status(405).send("Method Not Allowed");

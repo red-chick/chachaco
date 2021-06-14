@@ -1,5 +1,5 @@
 .container {
-  max-width: 700px;
+  max-width: calc(870px + 2em);
   margin: 5em auto;
 }
 
@@ -8,14 +8,21 @@
   text-align: center;
 }
 
+@media screen and (max-width: 1000px) {
+  .container {
+    max-width: calc(580px + 1em);
+  }
+}
+
 @media screen and (max-width: 700px) {
   .container {
+    max-width: 100%;
     width: 100%;
     padding: 2em;
     margin: 0;
   }
 
   .container > .header {
-    margin-bottom: 0;
+    margin-bottom: 1em;
   }
 }

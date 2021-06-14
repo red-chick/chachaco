@@ -1,7 +1,8 @@
-import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import {
   Button,
+  Card,
   Dimmer,
   Icon,
   Image,
@@ -35,6 +36,7 @@ const Games = () => {
   const {
     state: { user },
   } = useUserContext();
+  const router = useRouter();
 
   const [loadingLikes, setLoadingLikes] = useState([]);
 
@@ -82,64 +84,58 @@ const Games = () => {
   };
 
   return (
-    <Item.Group divided>
+    <Card.Group>
       {data.map((game) => (
-        <Link href={`/game/${game.gid}`}>
-          <Item style={{ cursor: "pointer" }}>
-            <Image
-              size="small"
-              src={game.imageUrls[0]}
-              className={styles.image}
-            />
-            <Item.Content>
-              <Item.Header>{game.title}</Item.Header>
-              <Item.Description>
-                {getKorDate(game.createdAt._seconds)}
-              </Item.Description>
-              <Item.Description>
-                <strong>{game.gid}</strong> | <strong>{game.pid}</strong>
-              </Item.Description>
-              <Item.Extra>
-                <Button as="div" labelPosition="left">
-                  <Label
-                    as="a"
-                    basic
-                    color={
-                      user && game.likesUids.includes(user.uid) ? "red" : null
-                    }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (!user || loadingLikes.includes(game.id)) return;
-                      game.likesUids.includes(user.uid)
-                        ? unlike(game.id)
-                        : like(game.id);
-                    }}
-                  >
-                    {game.likesCount}
-                  </Label>
-                  <Button
-                    icon
-                    loading={loadingLikes.includes(game.id)}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (!user || loadingLikes.includes(game.id)) return;
-                      game.likesUids.includes(user.uid)
-                        ? unlike(game.id)
-                        : like(game.id);
-                    }}
-                    color={
-                      user && game.likesUids.includes(user.uid) ? "red" : null
-                    }
-                  >
-                    <Icon name="heart" />
-                  </Button>
-                </Button>
-              </Item.Extra>
-            </Item.Content>
-          </Item>
-        </Link>
+        <Card
+          key={game.id}
+          className={styles.card}
+          onClick={() => router.push(`/game/${game.gid}`)}
+        >
+          <Image src={game.imageUrls[0]} wrapped ui={false} />
+          <Card.Content>
+            <Card.Header>{game.title}</Card.Header>
+            <Card.Meta>
+              <span>{getKorDate(game.createdAt._seconds)}</span>
+            </Card.Meta>
+            <Card.Description>
+              <strong>{game.gid}</strong> | <strong>{game.pid}</strong>
+            </Card.Description>
+          </Card.Content>
+          <Card.Content extra>
+            <Button as="div" labelPosition="left">
+              <Label
+                as="a"
+                basic
+                color={user && game.likesUids.includes(user.uid) ? "red" : null}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!user || loadingLikes.includes(game.id)) return;
+                  game.likesUids.includes(user.uid)
+                    ? unlike(game.id)
+                    : like(game.id);
+                }}
+              >
+                {game.likesCount}
+              </Label>
+              <Button
+                icon
+                loading={loadingLikes.includes(game.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!user || loadingLikes.includes(game.id)) return;
+                  game.likesUids.includes(user.uid)
+                    ? unlike(game.id)
+                    : like(game.id);
+                }}
+                color={user && game.likesUids.includes(user.uid) ? "red" : null}
+              >
+                <Icon name="heart" />
+              </Button>
+            </Button>
+          </Card.Content>
+        </Card>
       ))}
-    </Item.Group>
+    </Card.Group>
   );
 };
 

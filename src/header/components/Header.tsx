@@ -18,15 +18,10 @@ const Header = () => {
           </Menu.Item>
         </Link>
         <Menu.Item position="right">
-          {user && (
+          {user && router.pathname !== "/game/add" && (
             <>
               <Link href="/game/add">
-                <Button animated="vertical">
-                  <Button.Content hidden>게임 등록</Button.Content>
-                  <Button.Content visible>
-                    <Icon name="plus" />
-                  </Button.Content>
-                </Button>
+                <Button primary>게임 등록</Button>
               </Link>
             </>
           )}

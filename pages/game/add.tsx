@@ -88,7 +88,6 @@ const GameAddPage = () => {
           source,
         }),
       });
-      console.log(res);
       if (res.status === 200) {
         alert("게임이 등록 되었습니다.");
         router.push(`/game/${gid}`);

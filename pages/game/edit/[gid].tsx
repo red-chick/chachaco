@@ -110,9 +110,10 @@ const EditGamePage = () => {
           pid,
           content: content.replace(/\r\n|\r|\n/g, "<br />"),
           images,
+          maker,
+          source,
         }),
       });
-      console.log(res);
       if (res.status === 200) {
         router.push(`/game/${gid}`);
       } else {

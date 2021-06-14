@@ -17,7 +17,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.json(data[0]);
   } else if (req.method === "PATCH") {
     const { gid: docId } = req.query;
-    const { title, pid, content, images } = req.body;
+    const { title, pid, content, images, maker, source } = req.body;
 
     const data = await updateDoc("games", docId as string, {
       updatedAt: firestore.Timestamp.now(),
@@ -25,6 +25,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       pid,
       content,
       images,
+      maker,
+      source,
     });
 
     res.status(200).json(data);

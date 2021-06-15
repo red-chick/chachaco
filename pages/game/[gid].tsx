@@ -10,11 +10,13 @@ import {
   Image,
   Label,
   Loader,
+  Embed,
 } from "semantic-ui-react";
 import { useUserContext } from "../../src/common/contexts/UserContext";
 import Comments from "../../src/games/components/Comments";
 import styles from "../../styles/game/game.module.css";
 import Slider from "react-slick";
+import ReactPlayer from "react-player";
 
 const addZero = (num: number): string => {
   return num < 10 ? "0" + num : "" + num;
@@ -28,6 +30,13 @@ const getKorDate = (createdSeconds: number) => {
     date.getMinutes()
   )}:${addZero(date.getSeconds())}`;
 };
+
+function youtube_parser(url) {
+  var regExp =
+    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+  var match = url.match(regExp);
+  return match && match[7].length == 11 ? match[7] : false;
+}
 
 const sliderSettings = {
   infinite: true,
@@ -134,12 +143,23 @@ const GamePage = () => {
           </>
         )}
       </p>
+      {game.youtubeUrl && (
+        <div className={styles.playerWrapper}>
+          <ReactPlayer
+            className={styles.reactPlayer}
+            url={game.youtubeUrl}
+            width="100%"
+            height="100%"
+          />
+        </div>
+      )}
       <Slider {...sliderSettings}>
         {game.images &&
           game.images.map((image) => (
             <Image src={image.url} size="huge" centered />
           ))}
       </Slider>
+
       {game.source && (
         <p className={styles.source}>
           출처:{" "}

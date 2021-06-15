@@ -22,6 +22,15 @@ function getExt(filename: string) {
     .toLowerCase();
 }
 
+export const checkYoutubeUrl = (gid: string) => {
+  var exptext =
+    /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
+  if (exptext.test(gid) == false) {
+    return false;
+  }
+  return true;
+};
+
 export const checkGid = (gid: string) => {
   var exptext = /^G\-[A-Z0-9]{3}\-[A-Z0-9]{3}\-[A-Z0-9]{3}$/;
   if (exptext.test(gid) == false) {
@@ -50,6 +59,7 @@ const GameAddPage = () => {
   const [content, setContent] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [images, setImages] = useState([]);
+  const [youtubeUrl, setYoutubeUrl] = useState("");
   const [maker, setMaker] = useState("");
   const [source, setSource] = useState("");
 
@@ -84,6 +94,7 @@ const GameAddPage = () => {
           pid,
           content: content.replace(/\r\n|\r|\n/g, "<br />"),
           images,
+          youtubeUrl,
           maker,
           source,
         }),
@@ -122,7 +133,7 @@ const GameAddPage = () => {
       <Header size="huge">게임 등록</Header>
       <Form onSubmit={submit}>
         <Form.Field>
-          <label>게임 제목 *</label>
+          <label>게임 제목 (필수)</label>
           <input
             placeholder="게임 제목을 입력해주세요"
             value={title}
@@ -130,7 +141,7 @@ const GameAddPage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>게임 ID *</label>
+          <label>게임 ID (필수)</label>
           <Form.Input
             fluid
             error={
@@ -142,7 +153,7 @@ const GameAddPage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>프로그래머 ID</label>
+          <label>프로그래머 ID (선택)</label>
           <Form.Input
             fluid
             error={
@@ -156,7 +167,7 @@ const GameAddPage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>게임 설명</label>
+          <label>게임 설명 (선택)</label>
           <textarea
             placeholder="게임 설명을 입력해주세요"
             value={content}
@@ -164,12 +175,26 @@ const GameAddPage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>이미지 추가 (16:9 사이즈 권장)</label>
+          <label>이미지 추가 (선택) (16:9 사이즈 권장)</label>
           <input
             type="file"
             name="file"
             onChange={uploadFile}
             accept="image/*"
+          />
+        </Form.Field>
+        <Form.Field>
+          <label>유튜브 영상 (선택)</label>
+          <Form.Input
+            fluid
+            error={
+              youtubeUrl && !checkYoutubeUrl(youtubeUrl)
+                ? "유튜브 URL 형식이 올바르지 않습니다."
+                : null
+            }
+            placeholder="유튜브 영상의 링크를 입력해주세요"
+            value={youtubeUrl}
+            onChange={(e) => setYoutubeUrl(e.target.value)}
           />
         </Form.Field>
         <List>
@@ -189,7 +214,7 @@ const GameAddPage = () => {
         </List>
         {uploadingImage && <Message>이미지를 업로드하는 중입니다...</Message>}
         <Form.Field>
-          <label>제작자</label>
+          <label>제작자 (선택)</label>
           <Form.Input
             fluid
             placeholder="제작자의 이름을 입력해주세요"
@@ -198,7 +223,7 @@ const GameAddPage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>출처</label>
+          <label>출처 (선택)</label>
           <Form.Input
             fluid
             placeholder="출처를 입력해주세요"
@@ -213,7 +238,8 @@ const GameAddPage = () => {
             !gid ||
             uploadingImage ||
             !checkGid(gid) ||
-            (pid && !checkPid(pid))
+            (pid && !checkPid(pid)) ||
+            (youtubeUrl && !checkYoutubeUrl(youtubeUrl))
           }
         >
           등록

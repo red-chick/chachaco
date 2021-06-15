@@ -14,13 +14,21 @@ import {
 import { useUserContext } from "../../../src/common/contexts/UserContext";
 import styles from "../../../styles/game/edit.module.css";
 import firebase from "firebase";
-import game from "../../api/game";
 
 function getExt(filename: string) {
   return filename
     .substring(filename.lastIndexOf("."), filename.length)
     .toLowerCase();
 }
+
+export const checkYoutubeUrl = (gid: string) => {
+  var exptext =
+    /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
+  if (exptext.test(gid) == false) {
+    return false;
+  }
+  return true;
+};
 
 export const checkGid = (gid: string) => {
   var exptext = /^G\-[A-Z0-9]{3}\-[A-Z0-9]{3}\-[A-Z0-9]{3}$/;
@@ -51,6 +59,7 @@ const EditGamePage = () => {
   const [content, setContent] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [images, setImages] = useState([]);
+  const [youtubeUrl, setYoutubeUrl] = useState("");
   const [maker, setMaker] = useState("");
   const [source, setSource] = useState("");
   const [uid, setUid] = useState("");
@@ -109,6 +118,7 @@ const EditGamePage = () => {
           title,
           pid,
           content: content.replace(/\r\n|\r|\n/g, "<br />"),
+          youtubeUrl,
           images,
           maker,
           source,
@@ -185,6 +195,20 @@ const EditGamePage = () => {
             name="file"
             onChange={uploadFile}
             accept="image/*"
+          />
+        </Form.Field>
+        <Form.Field>
+          <label>유튜브 영상 (선택)</label>
+          <Form.Input
+            fluid
+            error={
+              youtubeUrl && !checkYoutubeUrl(youtubeUrl)
+                ? "유튜브 URL 형식이 올바르지 않습니다."
+                : null
+            }
+            placeholder="유튜브 영상의 링크를 입력해주세요"
+            value={youtubeUrl}
+            onChange={(e) => setYoutubeUrl(e.target.value)}
           />
         </Form.Field>
         <List>

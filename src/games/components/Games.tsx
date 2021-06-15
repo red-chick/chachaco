@@ -118,7 +118,7 @@ const Games = ({ order, setOrder }) => {
             ) : (
               <Image
                 className={styles.image}
-                src="/error-image-generic.png"
+                src="/error-image-generic.jpg"
                 wrapped
                 ui={false}
               ></Image>

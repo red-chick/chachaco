@@ -17,6 +17,4 @@ firebaseApp.auth().languageCode = "ko";
 
 export const db = firebaseApp.firestore();
 
-export const storage = firebase.storage();
-
-export default { db, firebaseApp, storage };
+export default { db, firebaseApp };

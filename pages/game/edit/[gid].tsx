@@ -193,6 +193,7 @@ const EditGamePage = () => {
     <div className={styles.container}>
       <Head>
         <title>게임 수정 - 차차코 게임 공유</title>
+        <meta property="og:title" content="게임 수정 - 차차코 게임 공유" />
       </Head>
       <Header size="huge">게임 수정</Header>
       <Form onSubmit={submit}>

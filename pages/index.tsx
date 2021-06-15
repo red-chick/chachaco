@@ -7,9 +7,6 @@ import styles from "../styles/home.module.css";
 export default function Home({ order, setOrder }) {
   return (
     <div className={styles.container}>
-      <Head>
-        <title>차차코 게임 공유</title>
-      </Head>
       <Header size="huge" className={styles.header}>
         차차코 게임 목록
       </Header>

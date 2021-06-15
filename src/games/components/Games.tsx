@@ -32,13 +32,12 @@ const getKorDate = (createdSeconds: number) => {
   )}:${addZero(date.getSeconds())}`;
 };
 
-const Games = () => {
+const Games = ({ order, setOrder }) => {
   const {
     state: { user },
   } = useUserContext();
   const router = useRouter();
 
-  const [order, setOrder] = useState<"createdAt" | "likesCount">("createdAt");
   const [loadingLikes, setLoadingLikes] = useState([]);
 
   const { data } = useSWR(`/api/games?order=${order}`, fetcher);

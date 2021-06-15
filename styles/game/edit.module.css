@@ -16,6 +16,21 @@
   cursor: pointer;
 }
 
+.arrowButton {
+  margin-left: 0.5em !important;
+  cursor: pointer;
+}
+
+.removeIcon {
+  padding-left: 1em;
+  cursor: pointer;
+}
+
+span.gray {
+  color: rgba(0, 0, 0, 0.5) !important;
+  font-weight: normal;
+}
+
 @media screen and (max-width: 700px) {
   .container {
     height: auto;

@@ -108,9 +108,6 @@ const GamePage = ({ data }) => {
     }
   };
 
-  console.log(game);
-  console.log(user);
-
   if (!game || !user)
     return (
       <Dimmer active>

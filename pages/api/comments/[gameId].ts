@@ -16,7 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         directionStr: "asc",
       }
     );
-    res.json(data);
+    res.json(data || []);
   } else {
     res.status(405).send("Method Not Allowed");
   }

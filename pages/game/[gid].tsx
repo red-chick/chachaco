@@ -36,7 +36,7 @@ const sliderSettings = {
   slidesToScroll: 1,
 };
 
-const GamePage = () => {
+const GamePage = ({ data }) => {
   const router = useRouter();
   const {
     state: { user },
@@ -52,15 +52,9 @@ const GamePage = () => {
     setGame(game);
   };
 
-  // useEffect(() => {
-  //   setGame(data);
-  // }, []);
-
   useEffect(() => {
-    if (router.query.gid) {
-      fetchGame();
-    }
-  }, [router.query.gid]);
+    setGame(data);
+  }, []);
 
   const like = async (id: string) => {
     setLoadingLikes((ids) => [...ids, id]);
@@ -124,8 +118,8 @@ const GamePage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>{game.title} - 차차코 게임 공유</title>
-        {/* <meta
+        <title>{data.title} - 차차코 게임 공유</title>
+        <meta
           property="og:title"
           content={`${data.title} - 차차코 게임 공유`}
         />
@@ -136,7 +130,7 @@ const GamePage = () => {
             property="og:image"
             content="https://www.chachaco.site/thumbnail.jpg"
           />
-        )} */}
+        )}
       </Head>
       <Header size="huge">{game.title}</Header>
       <p>
@@ -233,7 +227,7 @@ const GamePage = () => {
 
 export async function getServerSideProps({ query }) {
   const { gid } = query;
-  const res = await fetch(`http://localhost:3000/api/game/${gid}`);
+  const res = await fetch(`https://www.chachaco.site/api/game/${gid}`);
   const data = await res.json();
   return {
     props: { data },

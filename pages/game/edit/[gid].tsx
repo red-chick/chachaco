@@ -64,6 +64,7 @@ const EditGamePage = () => {
   const [maker, setMaker] = useState("");
   const [source, setSource] = useState("");
   const [uid, setUid] = useState("");
+  const [isSubmit, setIsSubmit] = useState(false);
 
   useEffect(() => {
     if (router.query.gid) {
@@ -142,7 +143,8 @@ const EditGamePage = () => {
   };
 
   const submit = async () => {
-    if (!docId || !title || !gid) return;
+    if (!docId || !title || !gid || isSubmit) return;
+    setIsSubmit(true);
     try {
       const res = await fetch(`/api/game/${docId}`, {
         method: "PATCH",
@@ -170,6 +172,8 @@ const EditGamePage = () => {
     } catch (error) {
       alert("게임 수정에 실패하였습니다. 잠시후 다시 이용해주세요.");
       console.error(error);
+    } finally {
+      setIsSubmit(false);
     }
   };
 
@@ -338,6 +342,7 @@ const EditGamePage = () => {
             !checkGid(gid) ||
             (pid && !checkPid(pid))
           }
+          loading={isSubmit}
         >
           수정
         </Button>

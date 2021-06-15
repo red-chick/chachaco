@@ -63,6 +63,7 @@ const GameAddPage = () => {
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [maker, setMaker] = useState("");
   const [source, setSource] = useState("");
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const uploadImageToFirebaseStorage = async (file) => {
     const filename = `${user.uid}_${Date.now()}${getExt(file.name)}`;
@@ -115,7 +116,8 @@ const GameAddPage = () => {
   };
 
   const submit = async () => {
-    if (!title || !gid) return;
+    if (!title || !gid || isSubmit) return;
+    setIsSubmit(true);
     try {
       const res = await fetch("/api/game", {
         method: "POST",
@@ -148,6 +150,8 @@ const GameAddPage = () => {
     } catch (error) {
       alert("게임 등록에 실패하였습니다. 잠시후 다시 이용해주세요.");
       console.error(error);
+    } finally {
+      setIsSubmit(false);
     }
   };
 
@@ -325,6 +329,7 @@ const GameAddPage = () => {
             (pid && !checkPid(pid)) ||
             (youtubeUrl && !checkYoutubeUrl(youtubeUrl))
           }
+          loading={isSubmit}
         >
           등록
         </Button>

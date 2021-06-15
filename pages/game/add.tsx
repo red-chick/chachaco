@@ -226,7 +226,7 @@ const GameAddPage = () => {
           </label>
           <Form.Input
             fluid
-            placeholder="2D 3D 1인칭_FPS 격투"
+            placeholder="2D 3D 1인칭_FPS 격투 등"
             value={tags}
             onChange={(e) => setTags(e.target.value)}
           />

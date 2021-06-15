@@ -22,10 +22,12 @@ const getKorDate = (createdSeconds: number) => {
 };
 
 const Comments = ({ game }) => {
-  const [comment, setComment] = useState("");
   const {
     state: { user },
   } = useUserContext();
+
+  const [comment, setComment] = useState("");
+  const [loadingRemove, setLoadingRemove] = useState(false);
 
   const { data: comments } = useSWR(`/api/comments/${game.id}`, fetcher);
 
@@ -53,6 +55,17 @@ const Comments = ({ game }) => {
     }
   };
 
+  const remove = async (commentId) => {
+    try {
+      await fetch(`/api/comment?id=${commentId}`, {
+        method: "DELETE",
+      });
+      trigger(`/api/comments/${game.id}`);
+    } catch (error) {
+      alert("삭제에 실패하였습니다. 잠시 후 다시 이용해주세요.");
+    }
+  };
+
   return (
     <Comment.Group>
       <Header as="h3" dividing>
@@ -68,6 +81,13 @@ const Comments = ({ game }) => {
                 <div>{getKorDate(comment.createdAt._seconds)}</div>
               </Comment.Metadata>
               <Comment.Text>{comment.comment}</Comment.Text>
+              {user && comment.uid === user.uid && (
+                <Comment.Actions>
+                  <Comment.Action onClick={() => remove(comment.id)}>
+                    삭제
+                  </Comment.Action>
+                </Comment.Actions>
+              )}
             </Comment.Content>
           </Comment>
         ))}

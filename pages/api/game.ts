@@ -4,8 +4,19 @@ import { firestore } from "firebase-admin";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
-    const { title, gid, pid, content, images, uid, uname, maker, source } =
-      req.body;
+    const {
+      title,
+      gid,
+      pid,
+      content,
+      tags,
+      images,
+      uid,
+      uname,
+      youtubeUrl,
+      maker,
+      source,
+    } = req.body;
 
     const games = await getCollectionWhere("games", {
       fieldPath: "gid",
@@ -27,7 +38,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       gid,
       pid,
       content,
+      tags,
       images,
+      youtubeUrl,
       likesUids: [],
       likesCount: 0,
       maker,

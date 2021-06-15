@@ -6,6 +6,14 @@
   height: 100% !important;
 }
 
+.cardHeader {
+  margin-bottom: 0.2em;
+}
+
+.cardDescription {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
 @media screen and (max-width: 700px) {
   .card {
     width: 100% !important;

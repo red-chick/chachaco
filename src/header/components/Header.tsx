@@ -21,7 +21,7 @@ const Header = () => {
           {user && router.pathname !== "/game/add" && (
             <>
               <Link href="/game/add">
-                <Button primary>게임 등록</Button>
+                <Button color="yellow">게임 등록</Button>
               </Link>
             </>
           )}

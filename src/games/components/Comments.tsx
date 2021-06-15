@@ -79,13 +79,9 @@ const Comments = ({ game }) => {
             onChange={(e) => setComment(e.target.value)}
             placeholder="댓글을 입력해주세요."
           />
-          <Button
-            content="댓글 작성"
-            labelPosition="left"
-            icon="edit"
-            disabled={!comment}
-            primary
-          />
+          <Button color="yellow" disabled={!comment}>
+            댓글 작성
+          </Button>
         </Form>
       )}
     </Comment.Group>

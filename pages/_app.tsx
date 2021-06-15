@@ -9,8 +9,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import UserContextProvider from "../src/common/contexts/UserContext";
+import { useState } from "react";
 
 function App({ Component, pageProps }: AppProps) {
+  const [order, setOrder] = useState<"createdAt" | "likesCount">("createdAt");
+
   return (
     <>
       <Head>
@@ -27,7 +30,7 @@ function App({ Component, pageProps }: AppProps) {
       <UserContextProvider>
         <Header />
         <main>
-          <Component {...pageProps} />
+          <Component {...pageProps} order={order} setOrder={setOrder} />
         </main>
       </UserContextProvider>
     </>

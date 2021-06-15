@@ -10,11 +10,13 @@ import {
   Image,
   Label,
   Loader,
+  Embed,
 } from "semantic-ui-react";
 import { useUserContext } from "../../src/common/contexts/UserContext";
 import Comments from "../../src/games/components/Comments";
 import styles from "../../styles/game/game.module.css";
 import Slider from "react-slick";
+import ReactPlayer from "react-player";
 
 const addZero = (num: number): string => {
   return num < 10 ? "0" + num : "" + num;
@@ -28,6 +30,13 @@ const getKorDate = (createdSeconds: number) => {
     date.getMinutes()
   )}:${addZero(date.getSeconds())}`;
 };
+
+function youtube_parser(url) {
+  var regExp =
+    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+  var match = url.match(regExp);
+  return match && match[7].length == 11 ? match[7] : false;
+}
 
 const sliderSettings = {
   infinite: true,
@@ -126,20 +135,33 @@ const GamePage = () => {
         {game.maker && <span>{game.maker} | </span>}
         {getKorDate(game.createdAt._seconds)}
       </p>
-      <p>
-        <strong>{game.gid}</strong>{" "}
+      <div className={styles.labels}>
+        <Label size="big" color="yellow">
+          {game.gid}
+        </Label>
         {game.pid && (
-          <>
-            | <strong>{game.pid}</strong>
-          </>
+          <Label size="big" color="yellow">
+            {game.pid}
+          </Label>
         )}
-      </p>
+      </div>
+      {game.youtubeUrl && (
+        <div className={styles.playerWrapper}>
+          <ReactPlayer
+            className={styles.reactPlayer}
+            url={game.youtubeUrl}
+            width="100%"
+            height="100%"
+          />
+        </div>
+      )}
       <Slider {...sliderSettings}>
         {game.images &&
           game.images.map((image) => (
             <Image src={image.url} size="huge" centered />
           ))}
       </Slider>
+
       {game.source && (
         <p className={styles.source}>
           출처:{" "}
@@ -152,6 +174,13 @@ const GamePage = () => {
         className={styles.content}
         dangerouslySetInnerHTML={{ __html: game.content }}
       />
+      {(game.tags || []).length > 0 && (
+        <div className={styles.tags}>
+          {game.tags.map((tag, i) => (
+            <Label key={i + tag}>{tag}</Label>
+          ))}
+        </div>
+      )}
       <Button as="div" labelPosition="left">
         <Label
           as="a"

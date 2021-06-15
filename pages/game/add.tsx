@@ -8,7 +8,8 @@ import {
   Loader,
   Message,
 } from "semantic-ui-react";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/storage";
 
 import styles from "../../styles/game/add.module.css";
 import { useState } from "react";

@@ -1,4 +1,3 @@
-import firebase from "firebase";
 import { firestore } from "./admin";
 
 type OrderBy = {

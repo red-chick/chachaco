@@ -13,7 +13,8 @@ import {
 } from "semantic-ui-react";
 import { useUserContext } from "../../../src/common/contexts/UserContext";
 import styles from "../../../styles/game/edit.module.css";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/storage";
 
 function getExt(filename: string) {
   return filename

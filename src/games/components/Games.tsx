@@ -151,7 +151,6 @@ const Games = ({ order, setOrder }) => {
             <Card.Content extra>
               <Button as="div" labelPosition="left">
                 <Label
-                  as="a"
                   basic
                   color={
                     user && game.likesUids.includes(user.uid) ? "red" : null

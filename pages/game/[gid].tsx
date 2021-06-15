@@ -158,7 +158,7 @@ const GamePage = () => {
       <Slider {...sliderSettings}>
         {game.images &&
           game.images.map((image) => (
-            <Image src={image.url} size="huge" centered />
+            <Image key={image.url} src={image.url} size="huge" centered />
           ))}
       </Slider>
 

@@ -8,7 +8,8 @@ import {
   Loader,
   Message,
 } from "semantic-ui-react";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/storage";
 
 import styles from "../../styles/game/add.module.css";
 import { useState } from "react";
@@ -63,6 +64,7 @@ const GameAddPage = () => {
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [maker, setMaker] = useState("");
   const [source, setSource] = useState("");
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const uploadImageToFirebaseStorage = async (file) => {
     const filename = `${user.uid}_${Date.now()}${getExt(file.name)}`;
@@ -115,7 +117,8 @@ const GameAddPage = () => {
   };
 
   const submit = async () => {
-    if (!title || !gid) return;
+    if (!title || !gid || isSubmit) return;
+    setIsSubmit(true);
     try {
       const res = await fetch("/api/game", {
         method: "POST",
@@ -148,6 +151,8 @@ const GameAddPage = () => {
     } catch (error) {
       alert("게임 등록에 실패하였습니다. 잠시후 다시 이용해주세요.");
       console.error(error);
+    } finally {
+      setIsSubmit(false);
     }
   };
 
@@ -166,6 +171,7 @@ const GameAddPage = () => {
     <div className={styles.container}>
       <Head>
         <title>게임 등록 - 차차코 게임 공유</title>
+        <meta property="og:title" content="게임 등록 - 차차코 게임 공유" />
       </Head>
       <Header size="huge">게임 등록</Header>
       <Form onSubmit={submit}>
@@ -226,7 +232,7 @@ const GameAddPage = () => {
           </label>
           <Form.Input
             fluid
-            placeholder="2D 3D 1인칭_FPS 격투"
+            placeholder="2D 3D 1인칭_FPS 격투 등"
             value={tags}
             onChange={(e) => setTags(e.target.value)}
           />
@@ -325,6 +331,7 @@ const GameAddPage = () => {
             (pid && !checkPid(pid)) ||
             (youtubeUrl && !checkYoutubeUrl(youtubeUrl))
           }
+          loading={isSubmit}
         >
           등록
         </Button>

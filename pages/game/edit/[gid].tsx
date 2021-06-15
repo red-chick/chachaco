@@ -13,7 +13,8 @@ import {
 } from "semantic-ui-react";
 import { useUserContext } from "../../../src/common/contexts/UserContext";
 import styles from "../../../styles/game/edit.module.css";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/storage";
 
 function getExt(filename: string) {
   return filename
@@ -64,6 +65,7 @@ const EditGamePage = () => {
   const [maker, setMaker] = useState("");
   const [source, setSource] = useState("");
   const [uid, setUid] = useState("");
+  const [isSubmit, setIsSubmit] = useState(false);
 
   useEffect(() => {
     if (router.query.gid) {
@@ -142,7 +144,8 @@ const EditGamePage = () => {
   };
 
   const submit = async () => {
-    if (!docId || !title || !gid) return;
+    if (!docId || !title || !gid || isSubmit) return;
+    setIsSubmit(true);
     try {
       const res = await fetch(`/api/game/${docId}`, {
         method: "PATCH",
@@ -170,6 +173,8 @@ const EditGamePage = () => {
     } catch (error) {
       alert("게임 수정에 실패하였습니다. 잠시후 다시 이용해주세요.");
       console.error(error);
+    } finally {
+      setIsSubmit(false);
     }
   };
 
@@ -188,6 +193,7 @@ const EditGamePage = () => {
     <div className={styles.container}>
       <Head>
         <title>게임 수정 - 차차코 게임 공유</title>
+        <meta property="og:title" content="게임 수정 - 차차코 게임 공유" />
       </Head>
       <Header size="huge">게임 수정</Header>
       <Form onSubmit={submit}>
@@ -240,7 +246,7 @@ const EditGamePage = () => {
           </label>
           <Form.Input
             fluid
-            placeholder="2D 3D 1인칭_FPS 격투"
+            placeholder="2D 3D 1인칭_FPS 격투 등"
             value={tags}
             onChange={(e) => setTags(e.target.value)}
           />
@@ -338,6 +344,7 @@ const EditGamePage = () => {
             !checkGid(gid) ||
             (pid && !checkPid(pid))
           }
+          loading={isSubmit}
         >
           수정
         </Button>

@@ -10,7 +10,6 @@ import {
   Image,
   Label,
   Loader,
-  Embed,
 } from "semantic-ui-react";
 import { useUserContext } from "../../src/common/contexts/UserContext";
 import Comments from "../../src/games/components/Comments";
@@ -31,20 +30,13 @@ const getKorDate = (createdSeconds: number) => {
   )}:${addZero(date.getSeconds())}`;
 };
 
-function youtube_parser(url) {
-  var regExp =
-    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-  var match = url.match(regExp);
-  return match && match[7].length == 11 ? match[7] : false;
-}
-
 const sliderSettings = {
   infinite: true,
   slidesToShow: 1,
   slidesToScroll: 1,
 };
 
-const GamePage = () => {
+const GamePage = ({ data }) => {
   const router = useRouter();
   const {
     state: { user },
@@ -61,10 +53,8 @@ const GamePage = () => {
   };
 
   useEffect(() => {
-    if (router.query.gid) {
-      fetchGame();
-    }
-  }, [router.query.gid]);
+    setGame(data);
+  }, []);
 
   const like = async (id: string) => {
     setLoadingLikes((ids) => [...ids, id]);
@@ -128,7 +118,19 @@ const GamePage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>{game.title} - 차차코 게임 공유</title>
+        <title>{data.title} - 차차코 게임 공유</title>
+        <meta
+          property="og:title"
+          content={`${data.title} - 차차코 게임 공유`}
+        />
+        {data.images && data.images.length > 0 ? (
+          <meta property="og:image" content={data.images[0].url} />
+        ) : (
+          <meta
+            property="og:image"
+            content="https://www.chachaco.site/thumbnail.jpg"
+          />
+        )}
       </Head>
       <Header size="huge">{game.title}</Header>
       <p>
@@ -158,7 +160,7 @@ const GamePage = () => {
       <Slider {...sliderSettings}>
         {game.images &&
           game.images.map((image) => (
-            <Image src={image.url} size="huge" centered />
+            <Image key={image.url} src={image.url} size="huge" centered />
           ))}
       </Slider>
 
@@ -222,5 +224,14 @@ const GamePage = () => {
     </div>
   );
 };
+
+export async function getServerSideProps({ query }) {
+  const { gid } = query;
+  const res = await fetch(`http://localhost:3000/api/game/${gid}`);
+  const data = await res.json();
+  return {
+    props: { data },
+  };
+}
 
 export default GamePage;

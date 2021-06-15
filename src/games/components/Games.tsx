@@ -118,7 +118,7 @@ const Games = ({ order, setOrder }) => {
             ) : (
               <Image
                 className={styles.image}
-                src="/error-image-generic.png"
+                src="/error-image-generic.jpg"
                 wrapped
                 ui={false}
               ></Image>
@@ -151,7 +151,6 @@ const Games = ({ order, setOrder }) => {
             <Card.Content extra>
               <Button as="div" labelPosition="left">
                 <Label
-                  as="a"
                   basic
                   color={
                     user && game.likesUids.includes(user.uid) ? "red" : null

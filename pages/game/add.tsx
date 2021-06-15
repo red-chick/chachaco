@@ -57,6 +57,7 @@ const GameAddPage = () => {
   const [gid, setGid] = useState("");
   const [pid, setPid] = useState("");
   const [content, setContent] = useState("");
+  const [tags, setTags] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [images, setImages] = useState([]);
   const [youtubeUrl, setYoutubeUrl] = useState("");
@@ -93,6 +94,7 @@ const GameAddPage = () => {
           gid,
           pid,
           content: content.replace(/\r\n|\r|\n/g, "<br />"),
+          tags: tags.trim() ? tags.trim().split(" ") : [],
           images,
           youtubeUrl,
           maker,
@@ -175,6 +177,15 @@ const GameAddPage = () => {
           />
         </Form.Field>
         <Form.Field>
+          <label>태그 입력 (선택) (띄어쓰기로 구분)</label>
+          <Form.Input
+            fluid
+            placeholder="2D 3D 1인칭_FPS 격투"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+          />
+        </Form.Field>
+        <Form.Field>
           <label>이미지 추가 (선택) (16:9 사이즈 권장)</label>
           <input
             type="file"
@@ -233,6 +244,7 @@ const GameAddPage = () => {
         </Form.Field>
         <Button
           type="submit"
+          color="yellow"
           disabled={
             !title ||
             !gid ||

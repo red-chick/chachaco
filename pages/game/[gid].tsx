@@ -135,14 +135,16 @@ const GamePage = () => {
         {game.maker && <span>{game.maker} | </span>}
         {getKorDate(game.createdAt._seconds)}
       </p>
-      <p>
-        <strong>{game.gid}</strong>{" "}
+      <div className={styles.labels}>
+        <Label size="big" color="yellow">
+          {game.gid}
+        </Label>
         {game.pid && (
-          <>
-            | <strong>{game.pid}</strong>
-          </>
+          <Label size="big" color="yellow">
+            {game.pid}
+          </Label>
         )}
-      </p>
+      </div>
       {game.youtubeUrl && (
         <div className={styles.playerWrapper}>
           <ReactPlayer
@@ -172,6 +174,13 @@ const GamePage = () => {
         className={styles.content}
         dangerouslySetInnerHTML={{ __html: game.content }}
       />
+      {(game.tags || []).length > 0 && (
+        <div className={styles.tags}>
+          {game.tags.map((tag, i) => (
+            <Label key={i + tag}>{tag}</Label>
+          ))}
+        </div>
+      )}
       <Button as="div" labelPosition="left">
         <Label
           as="a"

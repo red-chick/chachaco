@@ -57,6 +57,7 @@ const EditGamePage = () => {
   const [gid, setGid] = useState("");
   const [pid, setPid] = useState("");
   const [content, setContent] = useState("");
+  const [tags, setTags] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [images, setImages] = useState([]);
   const [youtubeUrl, setYoutubeUrl] = useState("");
@@ -72,12 +73,14 @@ const EditGamePage = () => {
         setDocId(game.id);
         setTitle(game.title);
         setGid(game.gid);
-        setPid(game.pid);
-        setContent(game.content.replace(/\<br \/\>/g, "\n"));
-        setImages(game.images);
-        setMaker(game.maker);
-        setSource(game.source);
-        setUid(game.uid);
+        setPid(game.pid || "");
+        setContent(game.content.replace(/\<br \/\>/g, "\n") || "");
+        setTags((game.tags || []).join(" "));
+        setImages(game.images || []);
+        setYoutubeUrl(game.youtubeUrl || "");
+        setMaker(game.maker || "");
+        setSource(game.source || "");
+        setUid(game.uid || "");
       })();
     }
   }, [router.query.gid]);
@@ -118,6 +121,7 @@ const EditGamePage = () => {
           title,
           pid,
           content: content.replace(/\r\n|\r|\n/g, "<br />"),
+          tags: tags.trim() ? tags.trim().split(" ") : [],
           youtubeUrl,
           images,
           maker,
@@ -155,7 +159,7 @@ const EditGamePage = () => {
       <Header size="huge">게임 수정</Header>
       <Form onSubmit={submit}>
         <Form.Field>
-          <label>게임 제목 *</label>
+          <label>게임 제목 (필수)</label>
           <input
             placeholder="게임 제목을 입력해주세요"
             value={title}
@@ -163,11 +167,11 @@ const EditGamePage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>게임 ID (수정 불가) *</label>
+          <label>게임 ID (필수) (수정 불가)</label>
           <input value={gid} readOnly></input>
         </Form.Field>
         <Form.Field>
-          <label>프로그래머 ID</label>
+          <label>프로그래머 ID (선택)</label>
           <Form.Input
             fluid
             error={
@@ -181,7 +185,7 @@ const EditGamePage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>게임 설명</label>
+          <label>게임 설명 (선택)</label>
           <textarea
             placeholder="게임 설명을 입력해주세요"
             value={content}
@@ -189,7 +193,16 @@ const EditGamePage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>이미지 추가</label>
+          <label>태그 입력 (선택) (띄어쓰기로 구분)</label>
+          <Form.Input
+            fluid
+            placeholder="2D 3D 1인칭_FPS 격투"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+          />
+        </Form.Field>
+        <Form.Field>
+          <label>이미지 추가 (선택)</label>
           <input
             type="file"
             name="file"
@@ -229,7 +242,7 @@ const EditGamePage = () => {
         </List>
         {uploadingImage && <Message>이미지를 업로드하는 중입니다...</Message>}
         <Form.Field>
-          <label>제작자</label>
+          <label>제작자 (선택)</label>
           <Form.Input
             fluid
             placeholder="제작자의 이름을 입력해주세요"
@@ -238,7 +251,7 @@ const EditGamePage = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>출처</label>
+          <label>출처 (선택)</label>
           <Form.Input
             fluid
             placeholder="출처를 입력해주세요"
@@ -248,6 +261,7 @@ const EditGamePage = () => {
         </Form.Field>
         <Button
           type="submit"
+          color="yellow"
           disabled={
             !title ||
             !gid ||

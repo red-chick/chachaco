@@ -124,12 +124,14 @@ const Games = ({ order, setOrder }) => {
               ></Image>
             )}
             <Card.Content>
-              <Card.Header>{game.title}</Card.Header>
+              <Card.Header className={styles.cardHeader}>
+                {game.title}
+              </Card.Header>
               <Card.Meta>
                 {game.maker && <span>{game.maker} |</span>}
                 <span>{getKorDate(game.createdAt._seconds)}</span>
               </Card.Meta>
-              <Card.Description>
+              <Card.Description className={styles.cardDescription}>
                 <strong>{game.gid}</strong>{" "}
                 {game.pid && (
                   <>
@@ -138,6 +140,14 @@ const Games = ({ order, setOrder }) => {
                 )}
               </Card.Description>
             </Card.Content>
+            {(game.tags || []).length > 0 && (
+              <Card.Content extra>
+                {game.tags.map((tag, i) => (
+                  <Label key={i + tag}>{tag}</Label>
+                ))}
+              </Card.Content>
+            )}
+
             <Card.Content extra>
               <Button as="div" labelPosition="left">
                 <Label

@@ -4,6 +4,10 @@
   padding: 5em 0;
 }
 
+.labels {
+  margin: 1em 0 !important;
+}
+
 .content {
   margin: 1em 0;
 }
@@ -14,6 +18,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .playerWrapper {
@@ -26,6 +31,10 @@
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.tags {
+  margin-bottom: 1em;
 }
 
 @media screen and (max-width: 700px) {

@@ -36,7 +36,7 @@ const sliderSettings = {
   slidesToScroll: 1,
 };
 
-const GamePage = ({ data }) => {
+const GamePage = () => {
   const router = useRouter();
   const {
     state: { user },
@@ -52,9 +52,15 @@ const GamePage = ({ data }) => {
     setGame(game);
   };
 
+  // useEffect(() => {
+  //   setGame(data);
+  // }, []);
+
   useEffect(() => {
-    setGame(data);
-  }, []);
+    if (router.query.gid) {
+      fetchGame();
+    }
+  }, [router.query.gid]);
 
   const like = async (id: string) => {
     setLoadingLikes((ids) => [...ids, id]);
@@ -118,8 +124,8 @@ const GamePage = ({ data }) => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>{data.title} - 차차코 게임 공유</title>
-        <meta
+        <title>{game.title} - 차차코 게임 공유</title>
+        {/* <meta
           property="og:title"
           content={`${data.title} - 차차코 게임 공유`}
         />
@@ -130,7 +136,7 @@ const GamePage = ({ data }) => {
             property="og:image"
             content="https://www.chachaco.site/thumbnail.jpg"
           />
-        )}
+        )} */}
       </Head>
       <Header size="huge">{game.title}</Header>
       <p>

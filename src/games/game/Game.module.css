@@ -1,17 +1,22 @@
-.image {
-  height: 163px !important;
-}
-
-.image > img {
-  height: 100% !important;
-}
-
 .cardHeader {
   margin-bottom: 0.2em;
 }
 
 .cardDescription {
   color: rgba(0, 0, 0, 0.85) !important;
+}
+
+.imageWrapper {
+  position: relative;
+  padding-top: 56.25%;
+}
+
+.imageWrapper > div {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100%;
+  height: 100%;
 }
 
 @media screen and (max-width: 700px) {

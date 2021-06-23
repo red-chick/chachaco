@@ -1,7 +1,8 @@
-import { Button, Container, Icon, Menu } from "semantic-ui-react";
+import { Button, Container, Menu } from "semantic-ui-react";
 import Link from "next/link";
-import { useUserContext } from "../../common/contexts/UserContext";
 import { useRouter } from "next/router";
+
+import { useUserContext } from "../common/contexts/UserContext";
 
 const Header = () => {
   const router = useRouter();

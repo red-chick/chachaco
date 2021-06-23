@@ -1,0 +1,10 @@
+.codes {
+  margin: 1em 0 !important;
+}
+
+@media screen and (max-width: 700px) {
+  .codes > div {
+    display: block !important;
+    margin: 0 0 0.5rem 0 !important;
+  }
+}

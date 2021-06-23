@@ -1,4 +1,4 @@
-import { firestore } from "./admin";
+import { firestore } from "./firebase";
 
 type OrderBy = {
   fieldPath: string | FirebaseFirestore.FieldPath;

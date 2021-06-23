@@ -1,50 +1,36 @@
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Dimmer,
-  Header,
-  Icon,
-  Image,
-  Label,
-  Loader,
-} from "semantic-ui-react";
-import { useUserContext } from "../../src/common/contexts/UserContext";
-import Comments from "../../src/games/components/Comments";
+import { Dimmer, Loader } from "semantic-ui-react";
+
 import styles from "../../styles/game/game.module.css";
-import Slider from "react-slick";
-import ReactPlayer from "react-player";
 
-const addZero = (num: number): string => {
-  return num < 10 ? "0" + num : "" + num;
+import { useUserContext } from "../../src/common/contexts/UserContext";
+import { GameType } from "../../src/common/firebase/type";
+
+import Comments from "../../src/game/Comments";
+import Tags from "../../src/common/components/Tags";
+import LikesButton from "../../src/common/components/LikesButton";
+import Title from "../../src/game/Title";
+import Information from "../../src/game/Information";
+import Codes from "../../src/game/Codes";
+import YoutubeVideo from "../../src/game/YoutubeVideo";
+import Images from "../../src/game/Images";
+import Source from "../../src/game/Source";
+import Content from "../../src/game/Content";
+import RemoveAndEditButtons from "../../src/game/RemoveAndEditButtons";
+
+type Props = {
+  data: GameType;
 };
 
-const getKorDate = (createdSeconds: number) => {
-  const date = new Date(createdSeconds * 1000);
-  return `${date.getFullYear()}.${
-    date.getMonth() + 1
-  }.${date.getDate()} ${addZero(date.getHours())}:${addZero(
-    date.getMinutes()
-  )}:${addZero(date.getSeconds())}`;
-};
-
-const sliderSettings = {
-  infinite: true,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-};
-
-const GamePage = ({ data }) => {
+const GamePage = ({ data }: Props) => {
   const router = useRouter();
   const {
     state: { user },
   } = useUserContext();
 
-  const [game, setGame] = useState(null);
-  const [loadingLikes, setLoadingLikes] = useState([]);
-  const [loadingRemove, setLoadingRemove] = useState(false);
+  const [game, setGame] = useState<GameType>(null);
 
   const fetchGame = async () => {
     const res = await fetch(`/api/game/${router.query.gid}`);
@@ -55,58 +41,6 @@ const GamePage = ({ data }) => {
   useEffect(() => {
     setGame(data);
   }, []);
-
-  const like = async (id: string) => {
-    setLoadingLikes((ids) => [...ids, id]);
-
-    await fetch("/api/game/like", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-        uid: user.uid,
-      }),
-    });
-    await fetchGame();
-    setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
-  };
-
-  const unlike = async (id: string) => {
-    setLoadingLikes((ids) => [...ids, id]);
-
-    await fetch("/api/game/unlike", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-        uid: user.uid,
-      }),
-    });
-    await fetchGame();
-    setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
-  };
-
-  const remove = async () => {
-    if (loadingRemove) return;
-
-    try {
-      setLoadingRemove(true);
-
-      await fetch(`/api/game/${game.id}`, {
-        method: "DELETE",
-      });
-
-      alert("삭제에 성공하였습니다.");
-
-      router.push("/");
-    } catch (error) {
-      alert("삭제에 실패하였습니다. 잠시 후 다시 이용해주세요.");
-    }
-  };
 
   if (!game || !user)
     return (
@@ -132,92 +66,29 @@ const GamePage = ({ data }) => {
           />
         )}
       </Head>
-      <Header size="huge">{game.title}</Header>
-      <p>
-        {game.maker && <span>{game.maker} | </span>}
-        {getKorDate(game.createdAt._seconds)}
-      </p>
-      <div className={styles.labels}>
-        <Label size="big" color="yellow">
-          {game.gid}
-        </Label>
-        {game.pid && (
-          <Label size="big" color="yellow">
-            {game.pid}
-          </Label>
-        )}
-      </div>
-      {game.youtubeUrl && (
-        <div className={styles.playerWrapper}>
-          <ReactPlayer
-            className={styles.reactPlayer}
-            url={game.youtubeUrl}
-            width="100%"
-            height="100%"
-          />
-        </div>
-      )}
-      <Slider {...sliderSettings}>
-        {game.images &&
-          game.images.map((image) => (
-            <Image key={image.url} src={image.url} size="huge" centered />
-          ))}
-      </Slider>
 
-      {game.source && (
-        <p className={styles.source}>
-          출처:{" "}
-          <a href={game.source} target="_blank">
-            {game.source}
-          </a>
-        </p>
+      <Title title={game.title} />
+
+      <Information maker={game.maker} seconds={game.createdAt._seconds} />
+
+      <Codes gid={game.gid} pid={game.pid} />
+
+      {game.youtubeUrl && <YoutubeVideo youtubeUrl={game.youtubeUrl} />}
+
+      <Images images={game.images} />
+
+      {game.source && <Source source={game.source} />}
+
+      <Content content={game.content} />
+
+      {game.tags && game.tags.length > 0 && (
+        <Tags tags={game.tags} className={styles.tags} />
       )}
-      <p
-        className={styles.content}
-        dangerouslySetInnerHTML={{ __html: game.content }}
-      />
-      {(game.tags || []).length > 0 && (
-        <div className={styles.tags}>
-          {game.tags.map((tag, i) => (
-            <Label key={i + tag}>{tag}</Label>
-          ))}
-        </div>
-      )}
-      <Button as="div" labelPosition="left">
-        <Label
-          as="a"
-          basic
-          color={user && game.likesUids.includes(user.uid) ? "red" : null}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!user || loadingLikes.includes(game.id)) return;
-            game.likesUids.includes(user.uid) ? unlike(game.id) : like(game.id);
-          }}
-        >
-          {game.likesCount}
-        </Label>
-        <Button
-          icon
-          loading={loadingLikes.includes(game.id)}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!user || loadingLikes.includes(game.id)) return;
-            game.likesUids.includes(user.uid) ? unlike(game.id) : like(game.id);
-          }}
-          color={user && game.likesUids.includes(user.uid) ? "red" : null}
-        >
-          <Icon name="heart" />
-        </Button>
-      </Button>
+
+      <LikesButton game={game} trigger={fetchGame} />
+
       {user && game && user.uid === game.uid && (
-        <>
-          <Button floated="right" onClick={remove} loading={loadingRemove}>
-            삭제
-          </Button>
-          <Link href={`/game/edit/${game.gid}`}>
-            <Button floated="right">수정</Button>
-          </Link>
-        </>
+        <RemoveAndEditButtons id={game.id} gid={game.gid} />
       )}
 
       <Comments game={game} />

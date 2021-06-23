@@ -1,7 +1,7 @@
+import { useState } from "react";
 import { AppProps } from "next/app";
 import Head from "next/head";
-
-import Header from "../src/header/components/Header";
+import useSWR, { trigger } from "swr";
 
 import "semantic-ui-css/semantic.min.css";
 import "../styles/globals.css";
@@ -9,10 +9,20 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import UserContextProvider from "../src/common/contexts/UserContext";
-import { useState } from "react";
 
-function App({ Component, pageProps }: AppProps) {
+import Header from "../src/header/Header";
+
+const fetcher = async (input: RequestInfo, init: RequestInit) => {
+  const res = await fetch(input, init);
+  return res.json();
+};
+
+const App = ({ Component, pageProps }: AppProps) => {
+  // 게임목록과 정렬기준 페이지 이동중에 초기화 되지 않도록 최상단 컴포넌트에 정의
   const [order, setOrder] = useState<"createdAt" | "likesCount">("createdAt");
+  const { data: games } = useSWR(`/api/games?order=${order}`, fetcher);
+
+  const triggerGames = () => trigger(`/api/games?order=${order}`);
 
   return (
     <>
@@ -39,11 +49,17 @@ function App({ Component, pageProps }: AppProps) {
       <UserContextProvider>
         <Header />
         <main>
-          <Component {...pageProps} order={order} setOrder={setOrder} />
+          <Component
+            {...pageProps}
+            order={order}
+            setOrder={setOrder}
+            games={games}
+            triggerGames={triggerGames}
+          />
         </main>
       </UserContextProvider>
     </>
   );
-}
+};
 
 export default App;

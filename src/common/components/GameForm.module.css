@@ -1,0 +1,22 @@
+.fileIcon {
+  padding: 0 !important;
+}
+
+.removeIcon {
+  padding-left: 1em;
+  cursor: pointer;
+}
+
+.arrowButton {
+  margin-left: 0.5em !important;
+  cursor: pointer;
+}
+
+span.gray {
+  color: rgba(0, 0, 0, 0.5) !important;
+  font-weight: normal;
+}
+
+.fileInput {
+  overflow: hidden;
+}

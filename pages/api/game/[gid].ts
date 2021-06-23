@@ -4,7 +4,7 @@ import {
   getCollectionWhere,
   updateDoc,
   deleteDoc,
-} from "../../../src/firebase/utils";
+} from "../../../src/api/utils";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { addArrayDoc } from "../../../src/firebase/utils";
+import { addArrayDoc } from "../../../src/api/utils";
 import admin from "firebase-admin";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

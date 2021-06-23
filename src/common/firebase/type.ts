@@ -1,3 +1,5 @@
+export type ImageType = { originName: string; url: string };
+
 export type GameType = {
   id: string;
   createdAt: { _seconds: number };
@@ -9,7 +11,7 @@ export type GameType = {
   pid: string;
   content: string;
   tags: string[];
-  images: { originName: string; url: string }[];
+  images: ImageType[];
   youtubeUrl: string;
   likesUids: string[];
   likesCount: number;

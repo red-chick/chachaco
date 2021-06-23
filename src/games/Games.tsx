@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Card, Dimmer, Loader, Menu } from "semantic-ui-react";
 
 import { GameType } from "../common/firebase/type";
+
 import Game from "./game/Game";
 
 type Props = {

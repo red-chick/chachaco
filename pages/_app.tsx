@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { AppProps } from "next/app";
 import Head from "next/head";
+import useSWR, { trigger } from "swr";
 
 import "semantic-ui-css/semantic.min.css";
 import "../styles/globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import Header from "../src/header/Header";
 import UserContextProvider from "../src/common/contexts/UserContext";
-import useSWR, { trigger } from "swr";
+
+import Header from "../src/header/Header";
 
 const fetcher = async (input: RequestInfo, init: RequestInit) => {
   const res = await fetch(input, init);

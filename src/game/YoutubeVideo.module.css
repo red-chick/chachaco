@@ -1,0 +1,11 @@
+.wrapper {
+  position: relative;
+  padding-top: 56.25%;
+  margin-bottom: 1em;
+}
+
+.player {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

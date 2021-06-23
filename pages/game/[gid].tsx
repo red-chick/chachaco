@@ -1,32 +1,24 @@
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Slider from "react-slick";
-import ReactPlayer from "react-player";
-import {
-  Button,
-  Dimmer,
-  Header,
-  Image,
-  Label,
-  Loader,
-} from "semantic-ui-react";
+import { Dimmer, Loader } from "semantic-ui-react";
 
 import styles from "../../styles/game/game.module.css";
 
 import { useUserContext } from "../../src/common/contexts/UserContext";
-import Comments from "../../src/game/Comments";
-import { getKorDate } from "../../src/common/utils/date";
 import { GameType } from "../../src/common/firebase/type";
+
+import Comments from "../../src/game/Comments";
 import Tags from "../../src/common/components/Tags";
 import LikesButton from "../../src/common/components/LikesButton";
-
-const sliderSettings = {
-  infinite: true,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-};
+import Title from "../../src/game/Title";
+import Information from "../../src/game/Information";
+import Codes from "../../src/game/Codes";
+import YoutubeVideo from "../../src/game/YoutubeVideo";
+import Images from "../../src/game/Images";
+import Source from "../../src/game/Source";
+import Content from "../../src/game/Content";
+import RemoveAndEditButtons from "../../src/game/RemoveAndEditButtons";
 
 type Props = {
   data: GameType;
@@ -39,7 +31,6 @@ const GamePage = ({ data }: Props) => {
   } = useUserContext();
 
   const [game, setGame] = useState<GameType>(null);
-  const [loadingRemove, setLoadingRemove] = useState(false);
 
   const fetchGame = async () => {
     const res = await fetch(`/api/game/${router.query.gid}`);
@@ -50,24 +41,6 @@ const GamePage = ({ data }: Props) => {
   useEffect(() => {
     setGame(data);
   }, []);
-
-  const remove = async () => {
-    if (loadingRemove) return;
-
-    try {
-      setLoadingRemove(true);
-
-      await fetch(`/api/game/${game.id}`, {
-        method: "DELETE",
-      });
-
-      alert("삭제에 성공하였습니다.");
-
-      router.push("/");
-    } catch (error) {
-      alert("삭제에 실패하였습니다. 잠시 후 다시 이용해주세요.");
-    }
-  };
 
   if (!game || !user)
     return (
@@ -94,55 +67,19 @@ const GamePage = ({ data }: Props) => {
         )}
       </Head>
 
-      <Header size="huge">{game.title}</Header>
+      <Title title={game.title} />
 
-      <p>
-        {game.maker && <span>{game.maker} | </span>}
-        {getKorDate(game.createdAt._seconds)}
-      </p>
+      <Information maker={game.maker} seconds={game.createdAt._seconds} />
 
-      <div className={styles.labels}>
-        <Label size="big" color="yellow">
-          {game.gid}
-        </Label>
-        {game.pid && (
-          <Label size="big" color="yellow">
-            {game.pid}
-          </Label>
-        )}
-      </div>
+      <Codes gid={game.gid} pid={game.pid} />
 
-      {game.youtubeUrl && (
-        <div className={styles.playerWrapper}>
-          <ReactPlayer
-            className={styles.reactPlayer}
-            url={game.youtubeUrl}
-            width="100%"
-            height="100%"
-          />
-        </div>
-      )}
+      {game.youtubeUrl && <YoutubeVideo youtubeUrl={game.youtubeUrl} />}
 
-      <Slider {...sliderSettings}>
-        {game.images &&
-          game.images.map((image) => (
-            <Image key={image.url} src={image.url} size="huge" centered />
-          ))}
-      </Slider>
+      <Images images={game.images} />
 
-      {game.source && (
-        <p className={styles.source}>
-          출처:{" "}
-          <a href={game.source} target="_blank">
-            {game.source}
-          </a>
-        </p>
-      )}
+      {game.source && <Source source={game.source} />}
 
-      <p
-        className={styles.content}
-        dangerouslySetInnerHTML={{ __html: game.content }}
-      />
+      <Content content={game.content} />
 
       {game.tags && game.tags.length > 0 && (
         <Tags tags={game.tags} className={styles.tags} />
@@ -151,14 +88,7 @@ const GamePage = ({ data }: Props) => {
       <LikesButton game={game} trigger={fetchGame} />
 
       {user && game && user.uid === game.uid && (
-        <>
-          <Button floated="right" onClick={remove} loading={loadingRemove}>
-            삭제
-          </Button>
-          <Link href={`/game/edit/${game.gid}`}>
-            <Button floated="right">수정</Button>
-          </Link>
-        </>
+        <RemoveAndEditButtons id={game.id} gid={game.gid} />
       )}
 
       <Comments game={game} />

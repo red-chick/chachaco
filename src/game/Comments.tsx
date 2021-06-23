@@ -3,7 +3,7 @@ import { Button, Comment, Form, Header } from "semantic-ui-react";
 import useSWR, { trigger } from "swr";
 
 import { useUserContext } from "../common/contexts/UserContext";
-import { Game } from "../common/firebase/type";
+import { GameType } from "../common/firebase/type";
 import { getKorDate } from "../common/utils/date";
 
 const fetcher = async (input: RequestInfo, init: RequestInit) => {
@@ -12,7 +12,7 @@ const fetcher = async (input: RequestInfo, init: RequestInit) => {
 };
 
 type Props = {
-  game: Game;
+  game: GameType;
 };
 
 const Comments = ({ game }: Props) => {

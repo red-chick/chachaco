@@ -1,4 +1,4 @@
-export type Game = {
+export type GameType = {
   id: string;
   createdAt: { _seconds: number };
   updatedAt: { _seconds: number };

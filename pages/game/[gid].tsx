@@ -8,7 +8,6 @@ import {
   Button,
   Dimmer,
   Header,
-  Icon,
   Image,
   Label,
   Loader,
@@ -19,7 +18,9 @@ import styles from "../../styles/game/game.module.css";
 import { useUserContext } from "../../src/common/contexts/UserContext";
 import Comments from "../../src/game/Comments";
 import { getKorDate } from "../../src/common/utils/date";
-import { Game } from "../../src/common/firebase/type";
+import { GameType } from "../../src/common/firebase/type";
+import Tags from "../../src/common/components/Tags";
+import LikesButton from "../../src/common/components/LikesButton";
 
 const sliderSettings = {
   infinite: true,
@@ -28,7 +29,7 @@ const sliderSettings = {
 };
 
 type Props = {
-  data: Game;
+  data: GameType;
 };
 
 const GamePage = ({ data }: Props) => {
@@ -37,8 +38,7 @@ const GamePage = ({ data }: Props) => {
     state: { user },
   } = useUserContext();
 
-  const [game, setGame] = useState<Game>(null);
-  const [loadingLikes, setLoadingLikes] = useState<string[]>([]);
+  const [game, setGame] = useState<GameType>(null);
   const [loadingRemove, setLoadingRemove] = useState(false);
 
   const fetchGame = async () => {
@@ -50,40 +50,6 @@ const GamePage = ({ data }: Props) => {
   useEffect(() => {
     setGame(data);
   }, []);
-
-  const like = async (id: string) => {
-    setLoadingLikes((ids) => [...ids, id]);
-
-    await fetch("/api/game/like", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-        uid: user.uid,
-      }),
-    });
-    await fetchGame();
-    setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
-  };
-
-  const unlike = async (id: string) => {
-    setLoadingLikes((ids) => [...ids, id]);
-
-    await fetch("/api/game/unlike", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-        uid: user.uid,
-      }),
-    });
-    await fetchGame();
-    setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
-  };
 
   const remove = async () => {
     if (loadingRemove) return;
@@ -127,11 +93,14 @@ const GamePage = ({ data }: Props) => {
           />
         )}
       </Head>
+
       <Header size="huge">{game.title}</Header>
+
       <p>
         {game.maker && <span>{game.maker} | </span>}
         {getKorDate(game.createdAt._seconds)}
       </p>
+
       <div className={styles.labels}>
         <Label size="big" color="yellow">
           {game.gid}
@@ -142,6 +111,7 @@ const GamePage = ({ data }: Props) => {
           </Label>
         )}
       </div>
+
       {game.youtubeUrl && (
         <div className={styles.playerWrapper}>
           <ReactPlayer
@@ -152,6 +122,7 @@ const GamePage = ({ data }: Props) => {
           />
         </div>
       )}
+
       <Slider {...sliderSettings}>
         {game.images &&
           game.images.map((image) => (
@@ -167,43 +138,18 @@ const GamePage = ({ data }: Props) => {
           </a>
         </p>
       )}
+
       <p
         className={styles.content}
         dangerouslySetInnerHTML={{ __html: game.content }}
       />
-      {(game.tags || []).length > 0 && (
-        <div className={styles.tags}>
-          {game.tags.map((tag, i) => (
-            <Label key={i + tag}>{tag}</Label>
-          ))}
-        </div>
+
+      {game.tags && game.tags.length > 0 && (
+        <Tags tags={game.tags} className={styles.tags} />
       )}
-      <Button as="div" labelPosition="left">
-        <Label
-          as="a"
-          basic
-          color={user && game.likesUids.includes(user.uid) ? "red" : null}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!user || loadingLikes.includes(game.id)) return;
-            game.likesUids.includes(user.uid) ? unlike(game.id) : like(game.id);
-          }}
-        >
-          {game.likesCount}
-        </Label>
-        <Button
-          icon
-          loading={loadingLikes.includes(game.id)}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!user || loadingLikes.includes(game.id)) return;
-            game.likesUids.includes(user.uid) ? unlike(game.id) : like(game.id);
-          }}
-          color={user && game.likesUids.includes(user.uid) ? "red" : null}
-        >
-          <Icon name="heart" />
-        </Button>
-      </Button>
+
+      <LikesButton game={game} trigger={fetchGame} />
+
       {user && game && user.uid === game.uid && (
         <>
           <Button floated="right" onClick={remove} loading={loadingRemove}>

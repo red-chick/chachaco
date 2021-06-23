@@ -98,7 +98,7 @@ const GamePage = ({ data }: Props) => {
 
 export async function getServerSideProps({ query }) {
   const { gid } = query;
-  const res = await fetch(`http://localhost:3000/api/game/${gid}`);
+  const res = await fetch(`https://www.chachaco.site/api/game/${gid}`);
   const data = await res.json();
   return {
     props: { data },

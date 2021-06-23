@@ -1,7 +1,7 @@
 import { firestore } from "firebase-admin";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { addDoc, deleteDoc } from "../../src/common/firebase/utils";
+import { addDoc, deleteDoc } from "../../src/api/utils";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {

@@ -1,16 +1,31 @@
+import { Dispatch, SetStateAction } from "react";
 import { Header } from "semantic-ui-react";
 
 import styles from "../styles/home.module.css";
 
 import Games from "../src/games/Games";
 
-export default function Home({ order, setOrder }) {
+type Props = {
+  order: "createdAt" | "likesCount";
+  setOrder: Dispatch<SetStateAction<"createdAt" | "likesCount">>;
+  games: any;
+  triggerGames: () => Promise<any>;
+};
+
+const Home = ({ order, setOrder, games, triggerGames }: Props) => {
   return (
     <div className={styles.container}>
       <Header size="huge" className={styles.header}>
         차차코 게임 목록
       </Header>
-      <Games order={order} setOrder={setOrder} />
+      <Games
+        order={order}
+        setOrder={setOrder}
+        games={games}
+        triggerGames={triggerGames}
+      />
     </div>
   );
-}
+};
+
+export default Home;

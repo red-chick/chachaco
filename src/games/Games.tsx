@@ -1,5 +1,5 @@
+import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/router";
-import { useState } from "react";
 import Image from "next/image";
 import {
   Button,
@@ -10,17 +10,21 @@ import {
   Loader,
   Menu,
 } from "semantic-ui-react";
-import useSWR, { trigger } from "swr";
-import { useUserContext } from "../common/contexts/UserContext";
-import styles from "./Games.module.css";
-import { getKorDate } from "../common/utils/date";
 
-const fetcher = async (input: RequestInfo, init: RequestInit) => {
-  const res = await fetch(input, init);
-  return res.json();
+import styles from "./Games.module.css";
+
+import { useUserContext } from "../common/contexts/UserContext";
+import { getKorDate } from "../common/utils/date";
+import { Game } from "../common/firebase/type";
+
+type Props = {
+  order: "createdAt" | "likesCount";
+  setOrder: Dispatch<SetStateAction<"createdAt" | "likesCount">>;
+  games: Game[];
+  triggerGames: () => Promise<any>;
 };
 
-const Games = ({ order, setOrder }) => {
+const Games = ({ order, setOrder, games, triggerGames }: Props) => {
   const {
     state: { user },
   } = useUserContext();
@@ -28,9 +32,7 @@ const Games = ({ order, setOrder }) => {
 
   const [loadingLikes, setLoadingLikes] = useState([]);
 
-  const { data } = useSWR(`/api/games?order=${order}`, fetcher);
-
-  if (!data)
+  if (!games)
     return (
       <Dimmer active>
         <Loader />
@@ -50,7 +52,9 @@ const Games = ({ order, setOrder }) => {
         uid: user.uid,
       }),
     });
-    await trigger(`/api/games?order=${order}`);
+
+    await triggerGames();
+
     setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
   };
 
@@ -67,7 +71,9 @@ const Games = ({ order, setOrder }) => {
         uid: user.uid,
       }),
     });
-    await trigger(`/api/games?order=${order}`);
+
+    await triggerGames();
+
     setLoadingLikes((ids) => ids.filter((_id) => _id !== id));
   };
 
@@ -90,7 +96,7 @@ const Games = ({ order, setOrder }) => {
         />
       </Menu>
       <Card.Group>
-        {data.map((game) => (
+        {games.map((game) => (
           <Card
             key={game.id}
             className={styles.card}

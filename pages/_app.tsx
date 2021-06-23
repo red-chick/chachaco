@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { useState } from "react";
 
 import "semantic-ui-css/semantic.min.css";
 import "../styles/globals.css";
@@ -9,9 +9,19 @@ import "slick-carousel/slick/slick-theme.css";
 
 import Header from "../src/header/Header";
 import UserContextProvider from "../src/common/contexts/UserContext";
+import useSWR, { trigger } from "swr";
 
-function App({ Component, pageProps }: AppProps) {
+const fetcher = async (input: RequestInfo, init: RequestInit) => {
+  const res = await fetch(input, init);
+  return res.json();
+};
+
+const App = ({ Component, pageProps }: AppProps) => {
   const [order, setOrder] = useState<"createdAt" | "likesCount">("createdAt");
+
+  const { data: games } = useSWR(`/api/games?order=${order}`, fetcher);
+
+  const triggerGames = () => trigger(`/api/games?order=${order}`);
 
   return (
     <>
@@ -38,11 +48,17 @@ function App({ Component, pageProps }: AppProps) {
       <UserContextProvider>
         <Header />
         <main>
-          <Component {...pageProps} order={order} setOrder={setOrder} />
+          <Component
+            {...pageProps}
+            order={order}
+            setOrder={setOrder}
+            games={games}
+            triggerGames={triggerGames}
+          />
         </main>
       </UserContextProvider>
     </>
   );
-}
+};
 
 export default App;

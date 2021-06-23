@@ -3,6 +3,7 @@ import { Button, Comment, Form, Header } from "semantic-ui-react";
 import useSWR, { trigger } from "swr";
 
 import { useUserContext } from "../common/contexts/UserContext";
+import { Game } from "../common/firebase/type";
 import { getKorDate } from "../common/utils/date";
 
 const fetcher = async (input: RequestInfo, init: RequestInit) => {
@@ -10,7 +11,11 @@ const fetcher = async (input: RequestInfo, init: RequestInit) => {
   return res.json();
 };
 
-const Comments = ({ game }) => {
+type Props = {
+  game: Game;
+};
+
+const Comments = ({ game }: Props) => {
   const {
     state: { user },
   } = useUserContext();
@@ -43,7 +48,7 @@ const Comments = ({ game }) => {
     }
   };
 
-  const remove = async (commentId) => {
+  const remove = async (commentId: string) => {
     try {
       await fetch(`/api/comment?id=${commentId}`, {
         method: "DELETE",

@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import {
   Button,
   Dimmer,
@@ -11,14 +11,20 @@ import {
   Loader,
   Message,
 } from "semantic-ui-react";
-import firebase from "firebase/app";
-import "firebase/storage";
 
 import styles from "../../../styles/game/edit.module.css";
 
 import { useUserContext } from "../../../src/common/contexts/UserContext";
-import { getExt } from "../../../src/common/utils/file";
-import { checkGid, checkPid, checkYoutubeUrl } from "../../../src/common/utils/regex";
+import {
+  checkGid,
+  checkPid,
+  checkYoutubeUrl,
+} from "../../../src/common/utils/regex";
+import { uploadImageToFirebaseStorage } from "../../../src/common/utils/file";
+
+const replaceLineBreakWithBrTag = (string: string) => {
+  return string.replace(/\<br \/\>/g, "\n") || "";
+};
 
 const EditGamePage = () => {
   const router = useRouter();
@@ -49,7 +55,7 @@ const EditGamePage = () => {
         setTitle(game.title);
         setGid(game.gid);
         setPid(game.pid || "");
-        setContent(game.content.replace(/\<br \/\>/g, "\n") || "");
+        setContent(replaceLineBreakWithBrTag(game.content));
         setTags((game.tags || []).join(" "));
         setImages(game.images || []);
         setYoutubeUrl(game.youtubeUrl || "");
@@ -64,23 +70,13 @@ const EditGamePage = () => {
     if (user && uid && user.uid !== uid) router.push("/");
   }, [user, uid]);
 
-  const uploadImageToFirebaseStorage = async (file) => {
-    const filename = `${user.uid}_${Date.now()}${getExt(file.name)}`;
-    await firebase.storage().ref(`images/${filename}`).put(file);
-    const url = await firebase
-      .storage()
-      .ref(`images/${filename}`)
-      .getDownloadURL();
-    return url;
-  };
-
-  const uploadFiles = async (e) => {
-    const files = e.target.files;
+  const uploadImages = async (e: ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
     if (files.length > 0) {
       setUploadingImage(true);
 
       const promises = [...files].map(async (file) => {
-        const url = await uploadImageToFirebaseStorage(file);
+        const url = await uploadImageToFirebaseStorage(user.uid, file);
         setImages((images) =>
           !images
             ? [{ originName: file.name, url }]
@@ -234,7 +230,7 @@ const EditGamePage = () => {
           <input
             type="file"
             name="file"
-            onChange={uploadFiles}
+            onChange={uploadImages}
             accept="image/*"
             multiple
           />

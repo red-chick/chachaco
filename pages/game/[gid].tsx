@@ -19,6 +19,7 @@ import styles from "../../styles/game/game.module.css";
 import { useUserContext } from "../../src/common/contexts/UserContext";
 import Comments from "../../src/game/Comments";
 import { getKorDate } from "../../src/common/utils/date";
+import { Game } from "../../src/common/firebase/type";
 
 const sliderSettings = {
   infinite: true,
@@ -26,14 +27,18 @@ const sliderSettings = {
   slidesToScroll: 1,
 };
 
-const GamePage = ({ data }) => {
+type Props = {
+  data: Game;
+};
+
+const GamePage = ({ data }: Props) => {
   const router = useRouter();
   const {
     state: { user },
   } = useUserContext();
 
-  const [game, setGame] = useState(null);
-  const [loadingLikes, setLoadingLikes] = useState([]);
+  const [game, setGame] = useState<Game>(null);
+  const [loadingLikes, setLoadingLikes] = useState<string[]>([]);
   const [loadingRemove, setLoadingRemove] = useState(false);
 
   const fetchGame = async () => {

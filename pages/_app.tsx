@@ -1,15 +1,14 @@
 import { AppProps } from "next/app";
 import Head from "next/head";
-
-import Header from "../src/header/components/Header";
+import { useState } from "react";
 
 import "semantic-ui-css/semantic.min.css";
 import "../styles/globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+import Header from "../src/header/Header";
 import UserContextProvider from "../src/common/contexts/UserContext";
-import { useState } from "react";
 
 function App({ Component, pageProps }: AppProps) {
   const [order, setOrder] = useState<"createdAt" | "likesCount">("createdAt");

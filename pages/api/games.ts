@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { getCollection } from "../../src/firebase/utils";
+import { getCollection } from "../../src/common/firebase/utils";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {

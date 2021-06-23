@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getCollectionWhere } from "../../../src/firebase/utils";
+import { getCollectionWhere } from "../../../src/common/firebase/utils";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { gameId } = req.query;

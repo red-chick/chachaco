@@ -110,7 +110,7 @@ type Props = {
 };
 
 const asyncGetFirebaseApp = async () => {
-  const { firebaseApp } = await import("../../../src/firebase/firebase");
+  const { firebaseApp } = await import("../firebase/firebase");
   return firebaseApp;
 };
 

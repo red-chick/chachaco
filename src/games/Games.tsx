@@ -1,35 +1,23 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import Image from "next/image";
 import {
   Button,
   Card,
   Dimmer,
   Icon,
-  Image,
   Label,
   Loader,
   Menu,
 } from "semantic-ui-react";
 import useSWR, { trigger } from "swr";
-import { useUserContext } from "../../common/contexts/UserContext";
+import { useUserContext } from "../common/contexts/UserContext";
 import styles from "./Games.module.css";
+import { getKorDate } from "../common/utils/date";
 
 const fetcher = async (input: RequestInfo, init: RequestInit) => {
   const res = await fetch(input, init);
   return res.json();
-};
-
-const addZero = (num: number): string => {
-  return num < 10 ? "0" + num : "" + num;
-};
-
-const getKorDate = (createdSeconds: number) => {
-  const date = new Date(createdSeconds * 1000);
-  return `${date.getFullYear()}.${
-    date.getMonth() + 1
-  }.${date.getDate()} ${addZero(date.getHours())}:${addZero(
-    date.getMinutes()
-  )}:${addZero(date.getSeconds())}`;
 };
 
 const Games = ({ order, setOrder }) => {
@@ -108,21 +96,18 @@ const Games = ({ order, setOrder }) => {
             className={styles.card}
             onClick={() => router.push(`/game/${game.gid}`)}
           >
-            {game.images && game.images[0] ? (
+            <div className={styles.imageWrapper}>
               <Image
-                className={styles.image}
-                src={game.images[0].url}
-                wrapped
-                ui={false}
+                src={
+                  game.images && game.images[0]
+                    ? game.images[0].url
+                    : "/error-image-generic.jpg"
+                }
+                width={"100%"}
+                height={"100%"}
+                quality={100}
               ></Image>
-            ) : (
-              <Image
-                className={styles.image}
-                src="/error-image-generic.jpg"
-                wrapped
-                ui={false}
-              ></Image>
-            )}
+            </div>
             <Card.Content>
               <Card.Header className={styles.cardHeader}>
                 {game.title}

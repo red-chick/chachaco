@@ -1,24 +1,13 @@
 import { useState } from "react";
 import { Button, Comment, Form, Header } from "semantic-ui-react";
 import useSWR, { trigger } from "swr";
-import { useUserContext } from "../../common/contexts/UserContext";
+
+import { useUserContext } from "../common/contexts/UserContext";
+import { getKorDate } from "../common/utils/date";
 
 const fetcher = async (input: RequestInfo, init: RequestInit) => {
   const res = await fetch(input, init);
   return res.json();
-};
-
-const addZero = (num: number): string => {
-  return num < 10 ? "0" + num : "" + num;
-};
-
-const getKorDate = (createdSeconds: number) => {
-  const date = new Date(createdSeconds * 1000);
-  return `${date.getFullYear()}.${
-    date.getMonth() + 1
-  }.${date.getDate()} ${addZero(date.getHours())}:${addZero(
-    date.getMinutes()
-  )}:${addZero(date.getSeconds())}`;
 };
 
 const Comments = ({ game }) => {
@@ -27,7 +16,6 @@ const Comments = ({ game }) => {
   } = useUserContext();
 
   const [comment, setComment] = useState("");
-  const [loadingRemove, setLoadingRemove] = useState(false);
 
   const { data: comments } = useSWR(`/api/comments/${game.id}`, fetcher);
 

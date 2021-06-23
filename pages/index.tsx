@@ -1,8 +1,8 @@
-import Head from "next/head";
 import { Header } from "semantic-ui-react";
-import Games from "../src/games/components/Games";
 
 import styles from "../styles/home.module.css";
+
+import Games from "../src/games/Games";
 
 export default function Home({ order, setOrder }) {
   return (

@@ -1,3 +1,6 @@
+import { useRouter } from "next/router";
+import Head from "next/head";
+import { useState } from "react";
 import {
   Button,
   Dimmer,
@@ -12,41 +15,14 @@ import firebase from "firebase/app";
 import "firebase/storage";
 
 import styles from "../../styles/game/add.module.css";
-import { useState } from "react";
+
 import { useUserContext } from "../../src/common/contexts/UserContext";
-import { useRouter } from "next/router";
-import Head from "next/head";
-
-function getExt(filename: string) {
-  return filename
-    .substring(filename.lastIndexOf("."), filename.length)
-    .toLowerCase();
-}
-
-export const checkYoutubeUrl = (gid: string) => {
-  var exptext =
-    /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
-  if (exptext.test(gid) == false) {
-    return false;
-  }
-  return true;
-};
-
-export const checkGid = (gid: string) => {
-  var exptext = /^G\-[A-Z0-9]{3}\-[A-Z0-9]{3}\-[A-Z0-9]{3}$/;
-  if (exptext.test(gid) == false) {
-    return false;
-  }
-  return true;
-};
-
-export const checkPid = (gid: string) => {
-  var exptext = /^P\-[A-Z0-9]{3}\-[A-Z0-9]{3}\-[A-Z0-9]{3}$/;
-  if (exptext.test(gid) == false) {
-    return false;
-  }
-  return true;
-};
+import { getExt } from "../../src/common/utils/file";
+import {
+  checkGid,
+  checkPid,
+  checkYoutubeUrl,
+} from "../../src/common/utils/regex";
 
 const GameAddPage = () => {
   const router = useRouter();

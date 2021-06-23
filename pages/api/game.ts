@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { addDoc, getCollectionWhere } from "../../src/firebase/utils";
+import { addDoc, getCollectionWhere } from "../../src/common/firebase/utils";
 import { firestore } from "firebase-admin";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

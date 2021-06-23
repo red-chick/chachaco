@@ -2,6 +2,8 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Slider from "react-slick";
+import ReactPlayer from "react-player";
 import {
   Button,
   Dimmer,
@@ -11,24 +13,12 @@ import {
   Label,
   Loader,
 } from "semantic-ui-react";
-import { useUserContext } from "../../src/common/contexts/UserContext";
-import Comments from "../../src/games/components/Comments";
+
 import styles from "../../styles/game/game.module.css";
-import Slider from "react-slick";
-import ReactPlayer from "react-player";
 
-const addZero = (num: number): string => {
-  return num < 10 ? "0" + num : "" + num;
-};
-
-const getKorDate = (createdSeconds: number) => {
-  const date = new Date(createdSeconds * 1000);
-  return `${date.getFullYear()}.${
-    date.getMonth() + 1
-  }.${date.getDate()} ${addZero(date.getHours())}:${addZero(
-    date.getMinutes()
-  )}:${addZero(date.getSeconds())}`;
-};
+import { useUserContext } from "../../src/common/contexts/UserContext";
+import Comments from "../../src/game/Comments";
+import { getKorDate } from "../../src/common/utils/date";
 
 const sliderSettings = {
   infinite: true,

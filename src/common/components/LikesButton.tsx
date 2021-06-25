@@ -3,6 +3,7 @@ import { Button, Icon, Label } from "semantic-ui-react";
 
 import { GameType } from "../firebase/type";
 import { useUserContext } from "../contexts/UserContext";
+import { patchGameLike, patchGameUnLike } from "../utils/fetchUtils";
 
 type Props = {
   game: GameType;
@@ -19,17 +20,7 @@ const LikesButton = ({ game, trigger }: Props) => {
   const like = async (id: string) => {
     setLoadingLike(true);
 
-    await fetch("/api/game/like", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-        uid: user.uid,
-      }),
-    });
-
+    await patchGameLike(id, user.uid);
     await trigger();
 
     setLoadingLike(false);
@@ -38,17 +29,7 @@ const LikesButton = ({ game, trigger }: Props) => {
   const unlike = async (id: string) => {
     setLoadingLike(true);
 
-    await fetch("/api/game/unlike", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-        uid: user.uid,
-      }),
-    });
-
+    await patchGameUnLike(id, user.uid);
     await trigger();
 
     setLoadingLike(false);

@@ -7,10 +7,8 @@ import styles from "../../../styles/game/edit.module.css";
 
 import { useUserContext } from "../../../src/common/contexts/UserContext";
 import useGameForm from "../../../src/common/hooks/useGameForm";
-import {
-  replaceBrTagWithLineBreak,
-  replaceLineBreakWithBrTag,
-} from "../../../src/common/utils/game";
+import { replaceLineBreakWithBrTag } from "../../../src/common/utils/game";
+import { getGame, patchGame } from "../../../src/common/utils/fetchUtils";
 
 import GameForm from "../../../src/common/components/GameForm";
 
@@ -41,7 +39,7 @@ const EditGamePage = () => {
   useEffect(() => {
     if (router.query.gid) {
       (async () => {
-        const res = await fetch(`/api/game/${router.query.gid}`);
+        const res = await getGame(router.query.gid);
         const game = await res.json();
         setGameForm(game);
       })();
@@ -56,23 +54,21 @@ const EditGamePage = () => {
     if (!docId || !title || !gid || isSubmit) return;
     setIsSubmit(true);
     try {
-      const res = await fetch(`/api/game/${docId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          docId,
-          title,
-          pid,
-          content: replaceLineBreakWithBrTag(content),
-          tags: tags.trim() ? tags.trim().split(" ") : [],
-          youtubeUrl,
-          images,
-          maker,
-          source,
-        }),
-      });
+      const contentToDB = replaceLineBreakWithBrTag(content);
+      const tagsToDB = tags.trim() ? tags.trim().split(" ") : [];
+
+      const res = await patchGame(
+        docId,
+        title,
+        pid,
+        contentToDB,
+        tagsToDB,
+        youtubeUrl,
+        images,
+        maker,
+        source
+      );
+
       if (res.status === 200) {
         router.push(`/game/${gid}`);
       } else {

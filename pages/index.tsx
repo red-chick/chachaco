@@ -9,10 +9,10 @@ type Props = {
   order: "createdAt" | "likesCount";
   setOrder: Dispatch<SetStateAction<"createdAt" | "likesCount">>;
   games: any;
-  triggerGames: () => Promise<any>;
+  trigger: () => Promise<any>;
 };
 
-const Home = ({ order, setOrder, games, triggerGames }: Props) => {
+const Home = ({ order, setOrder, games, trigger }: Props) => {
   return (
     <div className={styles.container}>
       <Header size="huge" className={styles.header}>
@@ -22,7 +22,7 @@ const Home = ({ order, setOrder, games, triggerGames }: Props) => {
         order={order}
         setOrder={setOrder}
         games={games}
-        triggerGames={triggerGames}
+        trigger={trigger}
       />
     </div>
   );

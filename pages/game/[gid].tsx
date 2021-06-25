@@ -7,6 +7,7 @@ import styles from "../../styles/game/game.module.css";
 
 import { useUserContext } from "../../src/common/contexts/UserContext";
 import { GameType } from "../../src/common/firebase/type";
+import { getGame, getGameFromServer } from "../../src/common/utils/fetchUtils";
 
 import Comments from "../../src/game/Comments";
 import Tags from "../../src/common/components/Tags";
@@ -33,7 +34,7 @@ const GamePage = ({ data }: Props) => {
   const [game, setGame] = useState<GameType>(null);
 
   const fetchGame = async () => {
-    const res = await fetch(`/api/game/${router.query.gid}`);
+    const res = await getGame(router.query.gid);
     const game = await res.json();
     setGame(game);
   };
@@ -98,7 +99,7 @@ const GamePage = ({ data }: Props) => {
 
 export async function getServerSideProps({ query }) {
   const { gid } = query;
-  const res = await fetch(`https://www.chachaco.site/api/game/${gid}`);
+  const res = await getGameFromServer(gid);
   const data = await res.json();
   return {
     props: { data },

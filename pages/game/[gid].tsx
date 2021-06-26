@@ -59,6 +59,12 @@ const GamePage = ({ data }: Props) => {
             content="https://www.chachaco.site/thumbnail.jpg"
           />
         )}
+        {data.content && (
+          <>
+            <meta name="description" content={data.content} />
+            <meta property="og:description" content={data.content} />
+          </>
+        )}
       </Head>
       {!game || !user ? (
         <Dimmer active>

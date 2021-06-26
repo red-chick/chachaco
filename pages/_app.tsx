@@ -17,7 +17,6 @@ import TopProgressBar from "../src/common/components/TopProgressBar";
 const App = ({ Component, pageProps }: AppProps) => {
   // 게임목록과 정렬기준 페이지 이동중에 초기화 되지 않도록 최상단 컴포넌트에 정의
   const [order, setOrder] = useState<"createdAt" | "likesCount">("createdAt");
-
   const { data: games, trigger } = useMySWR(`/api/games?order=${order}`);
 
   return (

@@ -52,26 +52,30 @@ const GamePage = ({ data }: Props) => {
           property="og:title"
           content={`${data.title} - 차차코 게임 공유`}
         />
-        {data.content && (
-          <>
-            <meta
-              name="description"
-              content={replaceBrTagWithLineBreak(data.content)}
-            />
-            <meta
-              property="og:description"
-              content={replaceBrTagWithLineBreak(data.content)}
-            />
-          </>
-        )}
-        {data.images && data.images.length > 0 ? (
-          <meta property="og:image" content={data.images[0].url} />
-        ) : (
-          <meta
-            property="og:image"
-            content="https://www.chachaco.site/thumbnail.jpg"
-          />
-        )}
+        <meta
+          name="description"
+          content={
+            data.content
+              ? replaceBrTagWithLineBreak(data.content)
+              : "차근차근 게임 코딩으로 제작한 게임들을 공유하는 커뮤니티 입니다."
+          }
+        />
+        <meta
+          property="og:description"
+          content={
+            data.content
+              ? replaceBrTagWithLineBreak(data.content)
+              : "차근차근 게임 코딩으로 제작한 게임들을 공유하는 커뮤니티 입니다."
+          }
+        />
+        <meta
+          property="og:image"
+          content={
+            data.images && data.images.length > 0
+              ? data.images[0].url
+              : "https://www.chachaco.site/thumbnail.jpg"
+          }
+        />
       </Head>
       {!game || !user ? (
         <Dimmer active>

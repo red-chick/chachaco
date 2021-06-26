@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { addArrayDoc } from "../../../src/api/utils";
 import admin from "firebase-admin";
+
+import { addArrayDoc } from "../../../src/api/utils";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "PATCH") {

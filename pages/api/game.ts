@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { addDoc, getCollectionWhere } from "../../src/api/utils";
 import { firestore } from "firebase-admin";
+
+import { addDoc, getCollectionWhere } from "../../src/api/utils";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {

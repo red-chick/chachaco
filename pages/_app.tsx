@@ -20,7 +20,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   return (
     <>
-      {/* <Head>
+      <Head>
         <meta
           name="viewport"
           content="initial-scale=1.0, width=device-width, user-scalable=no"
@@ -39,7 +39,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           property="og:image"
           content="https://www.chachaco.site/thumbnail.jpg"
         />
-      </Head> */}
+      </Head>
       <UserContextProvider>
         <Header />
         <main>

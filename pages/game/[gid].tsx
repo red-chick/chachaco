@@ -43,13 +43,6 @@ const GamePage = ({ data }: Props) => {
     setGame(data);
   }, []);
 
-  if (!game || !user)
-    return (
-      <Dimmer active>
-        <Loader />
-      </Dimmer>
-    );
-
   return (
     <div className={styles.container}>
       <Head>
@@ -67,32 +60,29 @@ const GamePage = ({ data }: Props) => {
           />
         )}
       </Head>
-
-      <Title title={game.title} />
-
-      <Information maker={game.maker} seconds={game.createdAt._seconds} />
-
-      <Codes gid={game.gid} pid={game.pid} />
-
-      {game.youtubeUrl && <YoutubeVideo youtubeUrl={game.youtubeUrl} />}
-
-      <Images images={game.images} />
-
-      {game.source && <Source source={game.source} />}
-
-      <Content content={game.content} />
-
-      {game.tags && game.tags.length > 0 && (
-        <Tags tags={game.tags} className={styles.tags} />
+      {!game || !user ? (
+        <Dimmer active>
+          <Loader />
+        </Dimmer>
+      ) : (
+        <>
+          <Title title={game.title} />
+          <Information maker={game.maker} seconds={game.createdAt._seconds} />
+          <Codes gid={game.gid} pid={game.pid} />
+          {game.youtubeUrl && <YoutubeVideo youtubeUrl={game.youtubeUrl} />}
+          <Images images={game.images} />
+          {game.source && <Source source={game.source} />}
+          <Content content={game.content} />
+          {game.tags && game.tags.length > 0 && (
+            <Tags tags={game.tags} className={styles.tags} />
+          )}
+          <LikesButton game={game} trigger={fetchGame} />
+          {user && game && user.uid === game.uid && (
+            <RemoveAndEditButtons id={game.id} gid={game.gid} />
+          )}
+          <Comments game={game} />
+        </>
       )}
-
-      <LikesButton game={game} trigger={fetchGame} />
-
-      {user && game && user.uid === game.uid && (
-        <RemoveAndEditButtons id={game.id} gid={game.gid} />
-      )}
-
-      <Comments game={game} />
     </div>
   );
 };

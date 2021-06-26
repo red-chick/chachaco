@@ -20,6 +20,7 @@ import Images from "../../src/game/Images";
 import Source from "../../src/game/Source";
 import Content from "../../src/game/Content";
 import RemoveAndEditButtons from "../../src/game/RemoveAndEditButtons";
+import { replaceBrTagWithLineBreak } from "../../src/common/utils/game";
 
 type Props = {
   data: GameType;
@@ -61,8 +62,14 @@ const GamePage = ({ data }: Props) => {
         )}
         {data.content && (
           <>
-            <meta name="description" content={data.content} />
-            <meta property="og:description" content={data.content} />
+            <meta
+              name="description"
+              content={replaceBrTagWithLineBreak(data.content)}
+            />
+            <meta
+              property="og:description"
+              content={replaceBrTagWithLineBreak(data.content)}
+            />
           </>
         )}
       </Head>

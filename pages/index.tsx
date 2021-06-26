@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { Header } from "semantic-ui-react";
+import Head from "next/head";
 
 import styles from "../styles/home.module.css";
 
@@ -15,6 +16,22 @@ type Props = {
 const Home = ({ order, setOrder, games, trigger }: Props) => {
   return (
     <div className={styles.container}>
+      <Head>
+        <title>차차코 게임 공유</title>
+        <meta property="og:title" content="차차코 게임 공유" />
+        <meta
+          name="description"
+          content="차근차근 게임 코딩으로 제작한 게임들을 공유하는 커뮤니티 입니다."
+        />
+        <meta
+          property="og:description"
+          content="차근차근 게임 코딩으로 제작한 게임들을 공유하는 커뮤니티 입니다."
+        />
+        <meta
+          property="og:image"
+          content="https://www.chachaco.site/thumbnail.jpg"
+        />
+      </Head>
       <Header size="huge" className={styles.header}>
         차차코 게임 목록
       </Header>

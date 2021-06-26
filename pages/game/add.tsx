@@ -75,6 +75,18 @@ const GameAddPage = () => {
       <Head>
         <title>게임 등록 - 차차코 게임 공유</title>
         <meta property="og:title" content="게임 등록 - 차차코 게임 공유" />
+        <meta
+          name="description"
+          content="차근차근 게임 코딩으로 제작한 게임들을 공유하는 커뮤니티 입니다."
+        />
+        <meta
+          property="og:description"
+          content="차근차근 게임 코딩으로 제작한 게임들을 공유하는 커뮤니티 입니다."
+        />
+        <meta
+          property="og:image"
+          content="https://www.chachaco.site/thumbnail.jpg"
+        />
       </Head>
       <Header size="huge">게임 등록</Header>
       <GameForm

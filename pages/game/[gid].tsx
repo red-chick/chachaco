@@ -52,14 +52,6 @@ const GamePage = ({ data }: Props) => {
           property="og:title"
           content={`${data.title} - 차차코 게임 공유`}
         />
-        {data.images && data.images.length > 0 ? (
-          <meta property="og:image" content={data.images[0].url} />
-        ) : (
-          <meta
-            property="og:image"
-            content="https://www.chachaco.site/thumbnail.jpg"
-          />
-        )}
         {data.content && (
           <>
             <meta
@@ -71,6 +63,14 @@ const GamePage = ({ data }: Props) => {
               content={replaceBrTagWithLineBreak(data.content)}
             />
           </>
+        )}
+        {data.images && data.images.length > 0 ? (
+          <meta property="og:image" content={data.images[0].url} />
+        ) : (
+          <meta
+            property="og:image"
+            content="https://www.chachaco.site/thumbnail.jpg"
+          />
         )}
       </Head>
       {!game || !user ? (

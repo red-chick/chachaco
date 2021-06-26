@@ -8,6 +8,7 @@ import styles from "../../styles/game/add.module.css";
 import { useUserContext } from "../../src/common/contexts/UserContext";
 import useGameForm from "../../src/common/hooks/useGameForm";
 import { replaceLineBreakWithBrTag } from "../../src/common/utils/game";
+import { postGame } from "../../src/common/utils/fetchUtils";
 
 import GameForm from "../../src/common/components/GameForm";
 
@@ -27,25 +28,24 @@ const GameAddPage = () => {
     if (!title || !gid || isSubmit) return;
     setIsSubmit(true);
     try {
-      const res = await fetch("/api/game", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          uid: user.uid,
-          uname: user.displayName,
-          title,
-          gid,
-          pid,
-          content: replaceLineBreakWithBrTag(content),
-          tags: tags.trim() ? tags.trim().split(" ") : [],
-          images,
-          youtubeUrl,
-          maker,
-          source,
-        }),
-      });
+      const { uid, displayName } = user;
+      const contentToDB = replaceLineBreakWithBrTag(content);
+      const tagsToDB = tags.trim() ? tags.trim().split(" ") : [];
+
+      const res = await postGame(
+        uid,
+        displayName,
+        title,
+        gid,
+        pid,
+        contentToDB,
+        tagsToDB,
+        images,
+        youtubeUrl,
+        maker,
+        source
+      );
+
       if (res.status === 200) {
         alert("게임이 등록 되었습니다.");
         router.push(`/game/${gid}`);
@@ -73,8 +73,23 @@ const GameAddPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>게임 등록 - 차차코 게임 공유</title>
-        <meta property="og:title" content="게임 등록 - 차차코 게임 공유" />
+        <title>게임 등록 - 차근차근 게임 코딩 공유 커뮤니티</title>
+        <meta
+          property="og:title"
+          content="게임 등록 - 차근차근 게임 코딩 공유 커뮤니티"
+        />
+        <meta
+          name="description"
+          content="차근차근 게임 코딩으로 제작한 게임들을 공유하는 커뮤니티 입니다."
+        />
+        <meta
+          property="og:description"
+          content="차근차근 게임 코딩으로 제작한 게임들을 공유하는 커뮤니티 입니다."
+        />
+        <meta
+          property="og:image"
+          content="https://www.chachaco.site/thumbnail.jpg"
+        />
       </Head>
       <Header size="huge">게임 등록</Header>
       <GameForm

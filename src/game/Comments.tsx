@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { Button, Comment, Form, Header } from "semantic-ui-react";
-import useSWR, { trigger } from "swr";
 
 import { useUserContext } from "../common/contexts/UserContext";
 import { GameType } from "../common/firebase/type";
+import useMySWR from "../common/hooks/useMySWR";
 import { getKorDate } from "../common/utils/date";
-
-const fetcher = async (input: RequestInfo, init: RequestInit) => {
-  const res = await fetch(input, init);
-  return res.json();
-};
+import { deleteGameComment, postGameComment } from "../common/utils/fetchUtils";
 
 type Props = {
   game: GameType;
@@ -22,26 +18,17 @@ const Comments = ({ game }: Props) => {
 
   const [comment, setComment] = useState("");
 
-  const { data: comments } = useSWR(`/api/comments/${game.id}`, fetcher);
+  const { data: comments, trigger } = useMySWR(`/api/comments/${game.id}`);
 
   const submit = async () => {
     if (!comment) return;
 
     try {
-      await fetch("/api/comment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          gameId: game.id,
-          uid: user.uid,
-          uname: user.displayName,
-          comment,
-        }),
-      });
+      await postGameComment(game.id, user.uid, user.displayName, comment);
+
       setComment("");
-      await trigger(`/api/comments/${game.id}`);
+
+      await trigger();
     } catch (error) {
       alert("덧글 작성에 실패하였습니다. 잠시후 다시 이용해주세요.");
       console.error(error);
@@ -50,10 +37,8 @@ const Comments = ({ game }: Props) => {
 
   const remove = async (commentId: string) => {
     try {
-      await fetch(`/api/comment?id=${commentId}`, {
-        method: "DELETE",
-      });
-      trigger(`/api/comments/${game.id}`);
+      await deleteGameComment(commentId);
+      trigger();
     } catch (error) {
       alert("삭제에 실패하였습니다. 잠시 후 다시 이용해주세요.");
     }

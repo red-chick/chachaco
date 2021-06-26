@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { Button } from "semantic-ui-react";
 
+import { deleteGame } from "../common/utils/fetchUtils";
+
 type Props = {
   id: string;
   gid: string;
@@ -19,9 +21,7 @@ const RemoveAndEditButtons = ({ id, gid }: Props) => {
     try {
       setLoadingRemove(true);
 
-      await fetch(`/api/game/${id}`, {
-        method: "DELETE",
-      });
+      await deleteGame(id);
 
       alert("삭제에 성공하였습니다.");
 

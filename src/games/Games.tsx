@@ -9,10 +9,10 @@ type Props = {
   order: "createdAt" | "likesCount";
   setOrder: Dispatch<SetStateAction<"createdAt" | "likesCount">>;
   games: GameType[];
-  triggerGames: () => Promise<any>;
+  trigger: () => Promise<any>;
 };
 
-const Games = ({ order, setOrder, games, triggerGames }: Props) => {
+const Games = ({ order, setOrder, games, trigger }: Props) => {
   if (!games)
     return (
       <Dimmer active>
@@ -40,7 +40,7 @@ const Games = ({ order, setOrder, games, triggerGames }: Props) => {
       </Menu>
       <Card.Group>
         {games.map((game) => (
-          <Game game={game} triggerGames={triggerGames} />
+          <Game game={game} trigger={trigger} />
         ))}
       </Card.Group>
     </>

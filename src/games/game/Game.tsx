@@ -6,15 +6,16 @@ import styles from "./Game.module.css";
 
 import { GameType } from "../../common/firebase/type";
 import { getKorDate } from "../../common/utils/date";
+
 import Tags from "../../common/components/Tags";
 import LikesButton from "../../common/components/LikesButton";
 
 type Props = {
   game: GameType;
-  triggerGames: () => Promise<any>;
+  trigger: () => Promise<any>;
 };
 
-const Game = ({ game, triggerGames }: Props) => {
+const Game = ({ game, trigger }: Props) => {
   const router = useRouter();
 
   return (
@@ -59,7 +60,7 @@ const Game = ({ game, triggerGames }: Props) => {
       )}
 
       <Card.Content extra>
-        <LikesButton game={game} trigger={triggerGames} />
+        <LikesButton game={game} trigger={trigger} />
       </Card.Content>
     </Card>
   );

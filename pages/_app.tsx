@@ -6,11 +6,13 @@ import "semantic-ui-css/semantic.min.css";
 import "../styles/globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "nprogress/nprogress.css";
 
 import UserContextProvider from "../src/common/contexts/UserContext";
+import useMySWR from "../src/common/hooks/useMySWR";
 
 import Header from "../src/header/Header";
-import useMySWR from "../src/common/hooks/useMySWR";
+import TopProgressBar from "../src/common/components/TopProgressBar";
 
 const App = ({ Component, pageProps }: AppProps) => {
   // 게임목록과 정렬기준 페이지 이동중에 초기화 되지 않도록 최상단 컴포넌트에 정의
@@ -26,6 +28,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           content="initial-scale=1.0, width=device-width, user-scalable=no"
         />
       </Head>
+      <TopProgressBar />
       <UserContextProvider>
         <Header />
         <main>

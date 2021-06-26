@@ -1,9 +1,10 @@
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { Form, Icon, List, Message, Button } from "semantic-ui-react";
-import { GameType, ImageType } from "../firebase/type";
-import { checkGid, checkPid, checkYoutubeUrl } from "../utils/regex";
 
 import styles from "./GameForm.module.css";
+
+import { GameType, ImageType } from "../firebase/type";
+import { checkGid, checkPid, checkYoutubeUrl } from "../utils/regex";
 
 type Props = {
   gameFormState: {

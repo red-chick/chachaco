@@ -6,6 +6,7 @@ import styles from "./Game.module.css";
 
 import { GameType } from "../../common/firebase/type";
 import { getKorDate } from "../../common/utils/date";
+
 import Tags from "../../common/components/Tags";
 import LikesButton from "../../common/components/LikesButton";
 

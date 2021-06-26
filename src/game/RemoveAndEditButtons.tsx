@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Button } from "semantic-ui-react";
+
 import { deleteGame } from "../common/utils/fetchUtils";
 
 type Props = {

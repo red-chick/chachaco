@@ -8,6 +8,7 @@ import styles from "../../styles/game/game.module.css";
 import { useUserContext } from "../../src/common/contexts/UserContext";
 import { GameType } from "../../src/common/firebase/type";
 import { getGame, getGameFromServer } from "../../src/common/utils/fetchUtils";
+import { replaceBrTagWithLineBreak } from "../../src/common/utils/game";
 
 import Comments from "../../src/game/Comments";
 import Tags from "../../src/common/components/Tags";
@@ -20,7 +21,6 @@ import Images from "../../src/game/Images";
 import Source from "../../src/game/Source";
 import Content from "../../src/game/Content";
 import RemoveAndEditButtons from "../../src/game/RemoveAndEditButtons";
-import { replaceBrTagWithLineBreak } from "../../src/common/utils/game";
 
 type Props = {
   data: GameType;

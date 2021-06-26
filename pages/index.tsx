@@ -17,8 +17,8 @@ const Home = ({ order, setOrder, games, trigger }: Props) => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>차차코 게임 공유</title>
-        <meta property="og:title" content="차차코 게임 공유" />
+        <title>차근차근 게임 코딩 공유 커뮤니티</title>
+        <meta property="og:title" content="차근차근 게임 코딩 공유 커뮤니티" />
         <meta
           name="description"
           content="차근차근 게임 코딩으로 제작한 게임들을 공유하는 커뮤니티 입니다."
@@ -32,9 +32,6 @@ const Home = ({ order, setOrder, games, trigger }: Props) => {
           content="https://www.chachaco.site/thumbnail.jpg"
         />
       </Head>
-      <Header size="huge" className={styles.header}>
-        차차코 게임 목록
-      </Header>
       <Games
         order={order}
         setOrder={setOrder}

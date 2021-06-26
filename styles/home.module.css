@@ -4,11 +4,6 @@
   padding: 5em 0;
 }
 
-.container > .header {
-  margin-bottom: 2em;
-  text-align: center;
-}
-
 @media screen and (max-width: 1000px) {
   .container {
     max-width: calc(580px + 1em);
@@ -21,9 +16,5 @@
     width: 100%;
     padding: 2em;
     margin: 0;
-  }
-
-  .container > .header {
-    margin-bottom: 1em;
   }
 }

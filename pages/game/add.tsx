@@ -73,8 +73,11 @@ const GameAddPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>게임 등록 - 차차코 게임 공유</title>
-        <meta property="og:title" content="게임 등록 - 차차코 게임 공유" />
+        <title>게임 등록 - 차근차근 게임 코딩 공유 커뮤니티</title>
+        <meta
+          property="og:title"
+          content="게임 등록 - 차근차근 게임 코딩 공유 커뮤니티"
+        />
         <meta
           name="description"
           content="차근차근 게임 코딩으로 제작한 게임들을 공유하는 커뮤니티 입니다."

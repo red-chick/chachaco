@@ -47,10 +47,10 @@ const GamePage = ({ data }: Props) => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>{data.title} - 차차코 게임 공유</title>
+        <title>{data.title} - 차근차근 게임 코딩 공유 커뮤니티</title>
         <meta
           property="og:title"
-          content={`${data.title} - 차차코 게임 공유`}
+          content={`${data.title} - 차근차근 게임 코딩 공유 커뮤니티`}
         />
         <meta
           name="description"

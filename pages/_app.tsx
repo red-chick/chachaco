@@ -26,6 +26,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           name="viewport"
           content="initial-scale=1.0, width=device-width, user-scalable=no"
         />
+        <meta property="og:type" content="website" />
       </Head>
       <TopProgressBar />
       <UserContextProvider>

@@ -35,10 +35,10 @@ const App = ({ Component, pageProps }: AppProps) => {
           property="og:description"
           content="차근차근 게임 코딩으로 제작한 게임들을 공유하는 커뮤니티 입니다."
         />
-        <meta
+        {/* <meta
           property="og:image"
           content="https://www.chachaco.site/thumbnail.jpg"
-        />
+        /> */}
       </Head>
       <UserContextProvider>
         <Header />
